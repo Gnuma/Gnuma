@@ -10,13 +10,14 @@ class Office(models.Model):
         (SP, 'Scuola superiore'),
         (MD, 'Scuola media')
     )
-    level = model.CharField(max_length = 2, choices = LEVEL, default = SP)
+    level = models.CharField(max_length = 2, choices = LEVEL, default = SP)
 
     def is_highschool(self):
         return self.level is self.SP
 
-class GnumaUser(User):
-    office = models.ForeignKey(Office, on_delete = models.CASCADE)
+class GnumaUser(models.Model):
+    user = models.OneToOneField(User, on_delete = models.CASCADE, primary_key = True)
+    office = models.ForeignKey(Office, on_delete = models.CASCADE) 
 
 class Class(models.Model):
     P  = '1'
@@ -31,7 +32,7 @@ class Class(models.Model):
         (Q, 'Quarto'),
         (QU, 'Quinto'),
     )
-    grade = model.CharField(max_length = 1, choices = GRADE, default = P)
+    grade = models.CharField(max_length = 1, choices = GRADE, default = P)
     A = 'A'
     B = 'B'
     C = 'C'
@@ -41,10 +42,16 @@ class Class(models.Model):
         (C , 'Seziona C'),
     )
     division = models.CharField(max_length = 1, choices = DIVISION, default = A)
-    office = models.ForignKey(Office, on_delete = model.CASCADE)
+    office = models.ForeignKey(Office, on_delete = models.CASCADE)
+
+class Book(models.Model):
+    title = models.CharField(max_length = 50)
+    author = models.CharField(max_length = 50)
+    isbn = models.CharField(max_length = 10, primary_key = True)
 
 class Ad(models.Model):
     title = models.CharField(max_length = 200)
     #Aggiungere immagine libro
     price = models.FloatField()
-    seller = fields.ForeignKey(GnumaUser, on_delete = models.CASCADE)
+    book = models.ForeignKey(Book, on_delete = models.CASCADE)
+    seller = models.ForeignKey(GnumaUser, on_delete = models.CASCADE)
