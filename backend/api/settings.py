@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     #3rd parties
     'corsheaders',
     'rest_framework',
+    'rest_framework.authtoken',
 
     #local
     'gnuma.apps.GnumaConfig',
@@ -133,6 +134,10 @@ STATIC_URL = '/static/'
 
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.AllowAny'
-    ]
+        'rest_framework.permissions.AllowAny',
+    ],
+    'DEFAULT_AUTHENTICATION_CLASSES':[
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.TokenAuthentication',
+    ],
 }
