@@ -19,6 +19,11 @@ class GnumaUser(models.Model):
     user = models.OneToOneField(User, on_delete = models.CASCADE, primary_key = True)
     office = models.ForeignKey(Office, on_delete = models.CASCADE) 
 
+class Book(models.Model):
+    title = models.CharField(max_length = 50)
+    author = models.CharField(max_length = 50)
+    isbn = models.CharField(max_length = 10, primary_key = True)
+
 class Class(models.Model):
     P  = '1'
     S = '2'
@@ -43,11 +48,9 @@ class Class(models.Model):
     )
     division = models.CharField(max_length = 1, choices = DIVISION, default = A)
     office = models.ForeignKey(Office, on_delete = models.CASCADE)
+    books = models.ForeignKey(Book, on_delete = models.CASCADE) 
 
-class Book(models.Model):
-    title = models.CharField(max_length = 50)
-    author = models.CharField(max_length = 50)
-    isbn = models.CharField(max_length = 10, primary_key = True)
+
 
 class Ad(models.Model):
     title = models.CharField(max_length = 200)
