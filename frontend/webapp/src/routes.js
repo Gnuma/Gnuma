@@ -1,9 +1,9 @@
 import React from "react";
 import { Route } from "react-router-dom";
-import Test from "./containers/Test";
+import AppBar from "./containers/AppBar";
 const BaseRouter = () => (
   <div>
-    <Route exact path="/" component={Test} />
+    <Route exact path="/" component={AppBar} />
   </div>
 );
 

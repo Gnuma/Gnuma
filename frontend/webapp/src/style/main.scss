@@ -1,0 +1,105 @@
+@import url('https://fonts.googleapis.com/css?family=Roboto');
+
+$primaryFont : 'Roboto', sans-serif;
+$colors: (
+    primary: #114B5F,
+    secondary: #1A936F,
+    white: #FFFFFF
+);
+$sb-border-rd: 6px; 
+
+@function color($color-name){
+    @return map-get($colors, $color-name)
+};
+
+body, html{
+    height: 100%;
+}
+
+body {
+    font-family: $primaryFont;
+}
+
+.app-bar{
+    background-color: color(secondary);
+    display: inline-grid;
+    grid-template-columns: 200px auto 200px;
+    grid-template-rows: 70px;
+    width: 100%;
+
+    .app-logo{
+        padding: 20px;
+        font-size: 24px;
+        letter-spacing: 15px;
+    }
+
+    .search-bar{
+        display: inline;
+        margin: auto 0;
+
+        .sub-menu {
+            margin: 0;
+            padding: 0;
+            border: none;
+            height: 34px;
+            vertical-align: bottom;
+            background-color: color(white);
+            border-right: solid 2px #7C7C7C;
+            border-top-left-radius: $sb-border-rd;
+            border-bottom-left-radius: $sb-border-rd;
+
+
+            span {
+                margin: 0;
+                padding: 0 10px;
+                border: none;
+                font-size: 14px;
+            }
+        }
+
+        ul {
+            display: none;
+        }
+
+        .search-input {
+            border: none;
+            margin: none;
+            width: calc(100% - 200px);
+            line-height: 34px;
+            font-size: 18px;
+            padding: 0px 10px;
+            outline: none;
+        }
+
+        .search-submit {
+            height: 34px;
+            width: 45px;
+            border: none;
+            vertical-align: bottom;
+            background: color(primary);
+            border-top-right-radius: $sb-border-rd;
+            border-bottom-right-radius: $sb-border-rd;
+
+            img{
+                height: 24px;
+                width: 24px;
+            }
+        }
+
+    }
+}
+
+.focus-vc{
+    border-top: solid 1px color(primary) !important;
+    border-bottom: solid 1px color(primary) !important;
+}
+
+.focus-n-r{
+    border: solid 1px color(primary) !important;
+    border-right: none !important;
+}
+
+.focus-n-l{
+    border: solid 1px color(primary) !important;
+
+}
