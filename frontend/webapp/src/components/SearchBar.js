@@ -1,44 +1,33 @@
-import React, { Component } from 'react'
+import React, { Component } from "react";
 import searchLogo from "../media/vectors/search-lens.svg";
+import DropDown from "./Inputs/DropDownList";
 
 export default class SearchBar extends Component {
-    constructor(props){
-        super(props);
-        this.focusAll = this.focusAll.bind(this);
-        this.focusOutAll = this.focusOutAll.bind(this);
-    }
+  constructor(props) {
+    super(props);
+    this.select = this.select.bind(this);
+  }
 
-    state = {
-        subjects: ["Italiano", "Matematica", "Inglese", "Storia"],
-        isFocused: false,
-    }
-  
-    focusAll(){
-        this.setState({isFocused: true});
-    }
+  state = {
+    isFocused: false,
+    selectedSub: this.props.subList[0],
+    subList: this.props.subList
+  };
 
-    focusOutAll(){
-        this.setState({isFocused: false});
-    }
+  select(subject) {
+    this.setState({ selectedSub: subject });
+  }
 
-    render() {
-        const {subjects, isFocused} = this.state;
+  render() {
+    const { subList, isFocused, selectedSub } = this.state;
     return (
-      <div className="search-bar">
-        <button className={"sub-menu " + (isFocused ? "focus-n-r" : "")}>
-            <span>Qualsiasi Materia</span>
+      <form className="search-bar">
+        <DropDown list={subList} selected={selectedSub} select={this.select} />
+        <input type="text" className="search-input " />
+        <button className="search-submit " type="submit">
+          <img src={searchLogo} alt="search" />
         </button>
-        <ul className="subject-drp-dw">
-            {this.state.subjects.map(sub => 
-                <li>{sub}</li>
-            )}
-        </ul>
-        <input type="text" className={"search-input " + (isFocused ? "focus-vc" : "")}  onFocus={this.focusAll} onBlur={this.focusOutAll} ></input>
-        <button className={"search-submit " + (isFocused ? "focus-n-l" : "")}>
-            <img src={searchLogo} alt="search"></img>
-        </button>
-      </div>
-    )
+      </form>
+    );
   }
 }
-
