@@ -1,0 +1,125 @@
+@import "./helper.scss";
+
+body,
+html {
+  height: 100%;
+}
+
+body {
+  font-family: $primaryFont;
+  color: color(primary-black);
+  margin: 0;
+  padding: 0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
+    monospace;
+}
+
+.app-bar {
+  background-color: color(secondary);
+  display: inline-grid;
+  grid-template-columns: 200px auto 300px;
+  grid-template-rows: 70px;
+  width: 100%;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.25);
+
+  .app-logo {
+    font-weight: weight(light);
+    color: color(white);
+    padding: 20px;
+    font-size: 24px;
+    letter-spacing: 15px;
+  }
+  .search-bar {
+    display: inline;
+    margin: auto 0;
+    .std-drp-btn {
+      margin: 0;
+      padding: 0 5px;
+      border: none;
+      height: 34px;
+      vertical-align: bottom;
+      background-color: color(white);
+      color: color(light-grey);
+      border-right: solid 2px #7c7c7c;
+      border-top-left-radius: $sb-border-rd;
+      border-bottom-left-radius: $sb-border-rd;
+
+      .drp-btn-selected {
+        float: left;
+        margin: 0;
+        padding: 0 5px;
+        border: none;
+        font-size: 14px;
+        overflow: hidden;
+        width: 120px;
+        text-align: left;
+      }
+      .chevron-drp {
+        float: right;
+      }
+    }
+    .search-input {
+      border: none;
+      margin: none;
+      width: calc(100% - 220px);
+      line-height: 34px;
+      font-size: 18px;
+      padding: 0px 10px;
+      outline: none;
+    }
+    .search-submit {
+      height: 34px;
+      width: 45px;
+      border: none;
+      vertical-align: bottom;
+      background: color(primary);
+      border-top-right-radius: $sb-border-rd;
+      border-bottom-right-radius: $sb-border-rd;
+      img {
+        height: 24px;
+        width: 24px;
+      }
+    }
+  }
+}
+.info-bar {
+  padding: 6px 16px;
+  font-size: 14px;
+  span {
+    padding-right: 20px;
+  }
+  border-bottom: solid 1px color(light-grey);
+}
+
+.main-list {
+  display: grid;
+  grid-template-columns: 270px auto;
+  .filter-panel {
+    border-right: solid 1px color(light-grey);
+  }
+}
+
+.filter-panel {
+  padding: 20px;
+  .filter-box {
+    .skinny-title {
+      margin-bottom: 4px;
+      span {
+        font-size: 18px;
+        color: color(secondary);
+        padding-right: 5px;
+      }
+    }
+    .filter-box-content {
+      margin-left: 14px;
+      .inline-radio-text {
+        margin: 4px 0;
+      }
+    }
+  }
+}

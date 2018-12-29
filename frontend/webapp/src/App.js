@@ -1,7 +1,8 @@
 import React, { Component } from "react";
-import "./App.css";
 import { BrowserRouter as Router } from "react-router-dom";
 import BaseRouter from "./routes";
+
+import "./icons";
 
 class App extends Component {
   render() {
