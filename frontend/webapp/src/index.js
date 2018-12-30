@@ -6,7 +6,6 @@ import reducer from "./store/reducers/test";
 import { createStore, compose, applyMiddleware } from "redux";
 import thunk from "redux-thunk";
 import { Provider } from "react-redux";
-
 import "./style/main.scss";
 import "./style/general.scss";
 

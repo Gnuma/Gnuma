@@ -2,6 +2,8 @@ import React, { Component } from "react";
 import onClickOutside from "react-onclickoutside";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
+import "./DropDownList.scss";
+
 class DropDownList extends Component {
   constructor(props) {
     super(props);
@@ -26,23 +28,25 @@ class DropDownList extends Component {
   }
 
   render() {
+    const { selected, list, select, style } = this.props;
     return (
-      <div style={{ display: "inline" }}>
-        <button className="std-drp-btn" type="button" onClick={this.showList}>
-          <span className="drp-btn-selected">{this.props.selected.name}</span>
+      <div className={style}>
+        <button className="drp-btn" type="button" onClick={this.showList}>
+          <span className="drp-btn-selected">{selected.name}</span>
           <span className="clr-p chevron-drp">
-            <FontAwesomeIcon icon="chevron-down" />
+            <FontAwesomeIcon icon="caret-down" />
           </span>
         </button>
-        <ul className={"std-dropdown " + (this.state.active ? "" : "hide")}>
-          {this.props.list.map(sub => (
+        <ul className={"drp-list " + (this.state.active ? "" : "hide")}>
+          {list.map(item => (
             <li
+              key={item.id}
               onClick={() => {
-                this.props.select(sub);
+                select(item);
                 this.hideList();
               }}
             >
-              {sub.name}
+              {item.name}
             </li>
           ))}
         </ul>

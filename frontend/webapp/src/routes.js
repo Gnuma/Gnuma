@@ -1,7 +1,7 @@
 import React from "react";
 import { Route } from "react-router-dom";
-import AppBar from "./containers/AppBar";
-import MainList from "./containers/MainList";
+import AppBar from "./containers/AppBar/AppBar";
+import MainList from "./containers/MainList/MainList";
 const BaseRouter = () => (
   <div>
     <Route path="/" component={AppBar} />

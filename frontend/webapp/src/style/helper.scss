@@ -4,7 +4,8 @@ $colors: (
   primary: #114b5f,
   secondary: #1a936f,
   white: #ffffff,
-  light-grey: #7c7c7c,
+  grey: #7c7c7c,
+  light-grey: #aaaaaa,
   primary-black: #202020
 );
 
@@ -12,12 +13,12 @@ $sb-border-rd: 6px;
 $fontWeights: (
   light: 300,
   regular: 500,
-  medium: 700
+  medium: 700,
+  bold: 800
 );
 @function color($color-name) {
   @return map-get($colors, $color-name);
 }
-
 @function weight($weight-name) {
   @return map-get($fontWeights, $weight-name);
 }

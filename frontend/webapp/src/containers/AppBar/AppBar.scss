@@ -1,0 +1,62 @@
+@import "../../style/helper.scss";
+
+.app-bar {
+  background-color: color(secondary);
+  display: inline-grid;
+  grid-template-columns: 200px auto 200px 200px;
+  grid-template-rows: 70px;
+  width: 100%;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.25);
+
+  .app-logo {
+    font-weight: weight(light);
+    color: color(white);
+    padding: 20px;
+    font-size: 24px;
+    letter-spacing: 15px;
+  }
+  .search-bar {
+    display: inline;
+    margin: auto 0;
+
+    .search-input {
+      border: none;
+      margin: 0;
+      width: calc(100% - 220px);
+      line-height: 34px;
+      height: 34px;
+      font-size: 18px;
+      padding: 0px 10px;
+      outline: none;
+    }
+    .search-submit {
+      height: 34px;
+      width: 45px;
+      border: none;
+      vertical-align: bottom;
+      background: color(primary);
+      border-top-right-radius: $sb-border-rd;
+      border-bottom-right-radius: $sb-border-rd;
+      img {
+        height: 24px;
+        width: 24px;
+      }
+    }
+  }
+  .school-bar {
+    margin: auto;
+  }
+  .user-bar {
+    margin: auto;
+
+    .log-sig {
+      color: color(primary);
+      font-weight: weight(bold);
+
+      span {
+        margin: 0 10px;
+        text-decoration: underline;
+      }
+    }
+  }
+}

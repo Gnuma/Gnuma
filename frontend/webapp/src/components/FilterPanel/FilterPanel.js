@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import RadioButton from "./Inputs/RadioButton";
+import RadioButton from "../Inputs/RadioButton";
+import "./FilterPanel.scss";
 
 export default class FilterPanel extends Component {
   constructor(props) {

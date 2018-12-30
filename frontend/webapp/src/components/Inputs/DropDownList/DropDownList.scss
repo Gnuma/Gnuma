@@ -1,0 +1,149 @@
+@import "../../../style/helper.scss";
+
+.appbar-drp-list {
+  display: inline;
+
+  .drp-btn:focus {
+    outline: none;
+    border-top: solid 2px color(primary) !important;
+  }
+  .drp-btn {
+    margin: 0;
+    padding: 0 5px;
+    height: 34px;
+    border: none;
+    vertical-align: bottom;
+    background-color: color(white);
+    color: color(primary-black);
+    border-right: solid 2px color(grey);
+    border-top-left-radius: $sb-border-rd;
+    border-bottom-left-radius: $sb-border-rd;
+
+    .drp-btn-selected {
+      margin: 0;
+      padding: 0 10px 0 2px;
+      border: none;
+      font-size: 14px;
+      overflow: hidden;
+      text-align: left;
+      vertical-align: middle;
+      display: inline-block;
+      width: 110px;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+    .chevron-drp {
+      font-size: 16px;
+      vertical-align: middle;
+    }
+  }
+
+  .drp-list {
+    position: absolute;
+    z-index: 1;
+    background: color(white);
+    margin: 0;
+    padding: 0;
+    border: solid 1px color(light-grey);
+    border-radius: $sb-border-rd;
+    list-style-type: none;
+    min-width: 200px;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.25);
+
+    li {
+      margin: 0;
+      padding: 8px 10px;
+      border-bottom: solid 1px color(light-grey);
+    }
+
+    li:hover {
+      background: color(primary);
+      color: (white);
+    }
+
+    li:first-child {
+      border-top-left-radius: $sb-border-rd;
+      border-top-right-radius: $sb-border-rd;
+    }
+
+    li:last-child {
+      border-bottom-left-radius: $sb-border-rd;
+      border-bottom-right-radius: $sb-border-rd;
+      border: none;
+    }
+  }
+}
+
+.std-drp-list {
+  display: inline-block;
+  .drp-btn:focus {
+    outline: none;
+    transition: 0.2s;
+    background-color: color(primary);
+    color: color(white);
+  }
+
+  .drp-btn {
+    margin: 0;
+    padding: 2px 0 2px 4px;
+    border: solid 2px color(primary);
+    background-color: color(white);
+    color: color(primary-black);
+    border-radius: $sb-border-rd;
+
+    .drp-btn-selected {
+      margin: 0;
+      border: none;
+      font-size: 14px;
+      font-weight: weight(bold);
+      overflow: hidden;
+      text-align: left;
+      vertical-align: middle;
+      display: inline-block;
+      width: 110px;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+    .chevron-drp {
+      padding: 0 5px;
+      font-size: 16px;
+      vertical-align: middle;
+    }
+  }
+
+  .drp-list {
+    position: absolute;
+    z-index: 1;
+    background: color(white);
+    margin: 0;
+    padding: 0;
+    border-radius: $sb-border-rd;
+    list-style-type: none;
+    min-width: 200px;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.25);
+
+    li {
+      margin: 0;
+      padding: 8px 10px;
+      border-bottom: solid 1px color(light-grey);
+    }
+
+    li:hover {
+      background: color(primary);
+      color: (white);
+    }
+
+    li:first-child {
+      border-top-left-radius: $sb-border-rd;
+      border-top-right-radius: $sb-border-rd;
+    }
+
+    li:last-child {
+      border-bottom-left-radius: $sb-border-rd;
+      border-bottom-right-radius: $sb-border-rd;
+      border: none;
+    }
+  }
+}

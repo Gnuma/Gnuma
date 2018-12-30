@@ -1,0 +1,9 @@
+@import "../../style/helper.scss";
+
+.main-list {
+  display: grid;
+  grid-template-columns: 270px auto;
+  .filter-panel {
+    border-right: solid 1px color(light-grey);
+  }
+}

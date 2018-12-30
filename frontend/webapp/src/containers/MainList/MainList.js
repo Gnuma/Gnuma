@@ -1,15 +1,12 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import InfoBar from "../components/InfoBar";
-import FilterPanel from "../components/FilterPanel";
-import StandardList from "../components/StandardList";
+import InfoBar from "../../components/InfoBar/InfoBar";
+import FilterPanel from "../../components/FilterPanel/FilterPanel";
+import StandardList from "../../components/StandardList/StandardList";
+import "./MainList.scss";
 
 export class MainList extends Component {
-  static propTypes = {
-    prop: PropTypes
-  };
-
   render() {
     return (
       <div>
