@@ -11,6 +11,7 @@ djangorestframework = "*"
 django-cors-headers = "*"
 mysqlclient = "*"
 django-rest-auth = "*"
+django-allauth = "*"
 
 [requires]
 python_version = "3.6"
