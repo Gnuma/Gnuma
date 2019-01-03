@@ -26,6 +26,7 @@ export default class ListResultFilter extends Component {
 
   render() {
     const { selectedOrder, orderList, selectedSub, subjectList } = this.state;
+    const { nResults, keyWord } = this.props;
     return (
       <div className="list-result-filter">
         <div className="list-filter-block">
@@ -46,6 +47,10 @@ export default class ListResultFilter extends Component {
             select={this.selectSubject}
             style="std-drp-list"
           />
+        </div>
+        <div className="n-result-block">
+          <span className="highlight">{nResults}</span> risultati trovati per
+          <span className="highlight">{keyWord}</span>
         </div>
       </div>
     );

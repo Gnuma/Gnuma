@@ -6,7 +6,7 @@ import "./icons";
 class App extends Component {
   render() {
     return (
-      <div>
+      <div id="app">
         <Router>
           <BaseRouter />
         </Router>

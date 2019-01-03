@@ -6,6 +6,27 @@
   font-size: 16px;
 }
 
+.m-title {
+  margin: 0;
+  font-weight: weight(bold);
+  font-size: 22px;
+  color: color(primary);
+}
+
+.lg-title {
+  margin: 0;
+  font-weight: weight(bold);
+  font-size: 24px;
+  color: color(primary);
+}
+
+.s-subtitle {
+  margin: 0;
+  font-weight: weight(regular);
+  font-size: 14px;
+  color: color(primary-black);
+}
+
 .std-field {
   width: auto;
   font-size: 12;
@@ -22,9 +43,9 @@
 .inline-radio-text {
   display: inline-grid;
   grid-template-columns: 20px 60px 140px;
-
   .radio-button img {
-    vertical-align: middle;
+    padding-top: 5px;
+    vertical-align: bottom;
   }
 
   span {
@@ -52,4 +73,14 @@
   border-radius: $sb-border-rd;
   padding: 8px 18px;
   font-size: 16px;
+}
+
+.highlight {
+  font-size: 14px;
+  color: color(primary);
+  font-weight: weight(bold);
+}
+
+button:hover {
+  cursor: pointer;
 }

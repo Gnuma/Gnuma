@@ -29,9 +29,17 @@ class DropDownList extends Component {
 
   render() {
     const { selected, list, select, style } = this.props;
+    let { focused } = this.props;
+    if (focused === undefined) {
+      focused = false;
+    }
     return (
       <div className={style}>
-        <button className="drp-btn" type="button" onClick={this.showList}>
+        <button
+          className={"drp-btn " + (focused ? "drp-focused" : "")}
+          type="button"
+          onClick={this.showList}
+        >
           <span className="drp-btn-selected">{selected.name}</span>
           <span className="clr-p chevron-drp">
             <FontAwesomeIcon icon="caret-down" />

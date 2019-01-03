@@ -3,7 +3,7 @@
 .app-bar {
   background-color: color(secondary);
   display: inline-grid;
-  grid-template-columns: 200px auto 200px 200px;
+  grid-template-columns: 190px auto 200px 200px;
   grid-template-rows: 70px;
   width: 100%;
   box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.25);
@@ -20,27 +20,43 @@
     margin: auto 0;
 
     .search-input {
+      transition: 0.1s;
       border: none;
       margin: 0;
-      width: calc(100% - 220px);
-      line-height: 34px;
+      width: calc(100% - 235px);
       height: 34px;
       font-size: 18px;
       padding: 0px 10px;
       outline: none;
+      border-top: solid 2px color(secondary);
+      border-bottom: solid 2px color(secondary);
     }
     .search-submit {
-      height: 34px;
+      transition: 0.1s;
+      height: 38px;
       width: 45px;
       border: none;
+      outline: none;
       vertical-align: bottom;
       background: color(primary);
       border-top-right-radius: $sb-border-rd;
       border-bottom-right-radius: $sb-border-rd;
+      border-top: solid 2px color(secondary);
+      border-bottom: solid 2px color(secondary);
+
       img {
         height: 24px;
         width: 24px;
       }
+    }
+    .search-submit-focused {
+      border-top: solid 2px color(primary);
+      border-bottom: solid 2px color(primary);
+    }
+
+    .search-input-focused {
+      border-top: solid 2px color(primary);
+      border-bottom: solid 2px color(primary);
     }
   }
   .school-bar {

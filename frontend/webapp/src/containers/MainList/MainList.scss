@@ -3,6 +3,7 @@
 .main-list {
   display: grid;
   grid-template-columns: 270px auto;
+  grid-template-rows: 100%;
   .filter-panel {
     border-right: solid 1px color(light-grey);
   }

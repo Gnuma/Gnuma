@@ -1,0 +1,30 @@
+@import "../../../style/helper.scss";
+
+$slider-height: 10px;
+$span-size: 16px;
+
+.slider {
+  display: block;
+  width: 200px;
+  height: $slider-height;
+  border: solid 1px color(grey);
+
+  span {
+    transition: 0.2s;
+    position: relative;
+    top: ($span-size - $slider-height) / -2;
+    display: block;
+    width: $span-size;
+    height: $span-size;
+    background-color: color(primary);
+  }
+  .dragging {
+    background-color: color(secondary);
+  }
+
+  span:hover {
+    top: (($span-size + 4) - $slider-height) / -2;
+    width: $span-size + 4;
+    height: $span-size + 4;
+  }
+}

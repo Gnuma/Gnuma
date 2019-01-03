@@ -1,11 +1,16 @@
 @import "../../style/helper.scss";
 
 .filter-panel {
+  height: 100%;
   padding: 20px;
   .filter-box {
+    margin-bottom: 12px;
     .skinny-title {
       margin-bottom: 4px;
       span {
+        display: inline-block;
+        width: 23px;
+        text-align: center;
         font-size: 18px;
         color: color(secondary);
         padding-right: 5px;
