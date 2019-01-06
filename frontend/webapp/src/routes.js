@@ -1,11 +1,15 @@
 import React from "react";
-import { Route } from "react-router-dom";
+import { Route, Switch, Redirect } from "react-router-dom";
 import AppBar from "./containers/AppBar/AppBar";
 import MainList from "./containers/MainList/MainList";
+import Login from "./containers/Login-Signup/Login";
+import Signup from "./containers/Login-Signup/Signup";
 const BaseRouter = () => (
-  <div className="base-router">
-    <Route path="/" component={AppBar} />
-    <Route exact path="/s/" component={MainList} />
+  <div id="base-router">
+    <Route path="/search" component={AppBar} />
+    <Route path="/search/:key" component={MainList} />
+    <Route path="/login" component={Login} />
+    <Route path="/signup" component={Signup} />
   </div>
 );
 

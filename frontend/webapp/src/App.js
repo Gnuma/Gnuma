@@ -1,18 +1,33 @@
 import React, { Component } from "react";
 import { BrowserRouter as Router } from "react-router-dom";
+import { connect } from "react-redux";
 import BaseRouter from "./routes";
+import * as actions from "./store/actions/auth";
 import "./icons";
 
 class App extends Component {
+  componentDidMount() {
+    this.props.onTryAutoSignup();
+  }
+
   render() {
     return (
-      <div id="app">
-        <Router>
-          <BaseRouter />
-        </Router>
-      </div>
+      <Router>
+        <BaseRouter />
+      </Router>
     );
   }
 }
 
-export default App;
+const mapStateToProps = state => ({});
+
+const mapDispatchToProps = dispatch => {
+  return {
+    onTryAutoSignup: () => dispatch(actions.authCheckState())
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(App);

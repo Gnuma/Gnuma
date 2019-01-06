@@ -1,9 +1,11 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
+import { NavLink } from "react-router-dom";
 import SearchBar from "../../components/AppBar/SearchBar";
 import SchoolBar from "../../components/AppBar/SchoolBar";
 import UserBar from "../../components/AppBar/UserBar";
+import logo from "../../media/vectors/logo.svg";
 import "./AppBar.scss";
 
 export class AppBar extends Component {
@@ -34,19 +36,24 @@ export class AppBar extends Component {
 
   render() {
     const { subList } = this.state;
+    const { isAuthenticated } = this.props;
 
     return (
       <nav className="app-bar">
-        <div className="app-logo">GNUMA</div>
+        <NavLink to="/search" className="logo">
+          <img src={logo} alt="Logo" />
+        </NavLink>
         <SearchBar subList={subList} />
         <SchoolBar school={undefined} />
-        <UserBar />
+        <UserBar isAuthenticated={isAuthenticated} />
       </nav>
     );
   }
 }
 
-const mapStateToProps = state => ({});
+const mapStateToProps = state => ({
+  isAuthenticated: state.token !== null
+});
 
 const mapDispatchToProps = {};
 

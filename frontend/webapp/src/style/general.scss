@@ -36,24 +36,6 @@
   padding: 2px 4px;
 }
 
-.radio-button {
-  display: inline;
-}
-
-.inline-radio-text {
-  display: inline-grid;
-  grid-template-columns: 20px 60px 140px;
-  .radio-button img {
-    padding-top: 5px;
-    vertical-align: bottom;
-  }
-
-  span {
-    margin: auto 0;
-    font-size: 14px;
-  }
-}
-
 .clr-p {
   color: color(primary) !important;
 }

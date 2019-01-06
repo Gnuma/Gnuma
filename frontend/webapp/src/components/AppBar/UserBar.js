@@ -1,4 +1,5 @@
 import React from "react";
+import { NavLink } from "react-router-dom";
 
 export default function UserBar(props) {
   const { user } = props;
@@ -6,7 +7,13 @@ export default function UserBar(props) {
     <div className="user-bar">
       {user === undefined ? (
         <div className="log-sig">
-          <span>Login</span>or<span>Signup</span>
+          <NavLink to="/login">
+            <span>Login</span>
+          </NavLink>
+          or
+          <NavLink to="/signup">
+            <span>Signup</span>
+          </NavLink>
         </div>
       ) : (
         <span>{user.name}</span>

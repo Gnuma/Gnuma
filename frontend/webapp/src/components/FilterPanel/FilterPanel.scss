@@ -18,8 +18,15 @@
     }
     .filter-box-content {
       margin-left: 14px;
+
       .inline-radio-text {
+        display: inline-grid;
+        grid-template-columns: 20px 60px 140px;
         margin: 4px 0;
+        span {
+          margin: auto 0;
+          font-size: 14px;
+        }
       }
     }
   }
