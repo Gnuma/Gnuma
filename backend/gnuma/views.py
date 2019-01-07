@@ -1,25 +1,21 @@
-from rest_framework import viewsets, generics
+from rest_framework import viewsets, generics, status
 from .models import GnumaUser, Book, Office, Class, Ad
 #from .serializers import BookSerializer, AdSerializer, UserSerializer
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
+from rest_framework.authtoken.models import Token
+from django.contrib.auth.models import User
+from rest_framework.decorators import api_view, authentication_classes
 #from .permissions import  IsAuthenticated
+from rest_framework.authentication import TokenAuthentication
 
-"""
+'''
+Create the GnumaUser object.
+It must be called right after the registration phase.
 
-class BookManagement(viewsets.ModelViewSet):
-    queryset = Book.objects.all()
-    serializer_class = BookSerializer
-    permission_classes =
+Parameters:
 
-"""
+key: the key returned by the registration API.
 
-
-"""
-View che conclude il processo di registrazione dell'utente:
-
-
-Essendo la registrazione implementata da pacchetti esterni, non c'è un modo semplice per gestire le informazioni aggiuntive che ogni utente di Gnuma 
-dovrà avere (si guardi models.GnumaUser). Perciò il tutto sarà mascherato frontend:
 
 Front-end                               API
 
@@ -28,18 +24,23 @@ Front-end                               API
         <--------------------   token
     
     token ------------------->  (url view) 
+'''
+@api_view(['POST',])
+@authentication_classes([TokenAuthentication,])
+def init_user(request):
+    print(request.data['office']+"  "+request.data['key'])
+    if request.method == 'POST':
+        try:
+            token = Token.objects.get(key = request.data['key'])
+        except GnumaUser.DoesNotExist:
+            return HttpResponse(status = status.HTTP_400_BAD_REQUEST)
+        username = token.user
+        user = User.objects.get(username = token.user)
+        newUser = GnumaUser.objects.create(user = user, office = Office.objects.get(name = request.data['office']))
+        newUser.save()
+        return HttpResponse(status = status.HTTP_201_CREATED)
+    else:
+        return HttpResponse(status = status.HTTP_400_BAD_REQUEST)
+    
 
-"""
 
-class GnumaUserManagement(generics.CreateAPIView):
-    '''
-    Crea l'utente associato al token passato 
-    '''
-    #permission_classes = (IsAuthenticated,) 
-    def post(self, request):
-        key = request.data['key'] #Esiste perchè prima di elaborare la richiesta viene verificato l'utente mittente
-
-
-def prova(request):
-    print(request.user)
-    return HttpResponse("Roger")

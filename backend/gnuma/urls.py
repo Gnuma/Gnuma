@@ -1,7 +1,7 @@
 from django.urls import path, include
-from .views import prova
+from .views import init_user
 
 
 urlpatterns = [
-    path('prova/', prova),
+    path('init/', init_user),
 ]
