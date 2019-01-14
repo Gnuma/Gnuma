@@ -68,4 +68,7 @@ class Ad(models.Model):
     price = models.FloatField()
     book = models.ForeignKey(Book, on_delete = models.CASCADE)
     seller = models.ForeignKey(GnumaUser, on_delete = models.CASCADE)
+    
+    def __str__(self):
+        return GnumaUser.__str__(self.seller)+":"+self.title
 
