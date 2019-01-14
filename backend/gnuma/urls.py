@@ -1,10 +1,10 @@
 from django.urls import path, include
-from .views import init_user
 from rest_framework import routers
-from .views import BookManager
+from .views import BookManager, AdManager, init_user
 
 router = routers.SimpleRouter()
 router.register(r'books', BookManager, basename = "book")
+router.register(r'ads', AdManager)
 
 urlpatterns = [
     path('init/', init_user),
