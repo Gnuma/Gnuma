@@ -1,11 +1,10 @@
-from rest_framework import viewsets, generics, status
+from rest_framework import viewsets, status
 from .models import GnumaUser, Book, Office, Class, Ad
-from .serializers import BookSerializer
+from .serializers import BookSerializer, AdSerializer
 from django.http import HttpResponse, JsonResponse
 from rest_framework.authtoken.models import Token
 from django.contrib.auth.models import User
-from rest_framework.decorators import api_view, authentication_classes
-#from .permissions import  IsAuthenticated
+from rest_framework.decorators import api_view, authentication_classes, action
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import  IsAuthenticated , AllowAny 
 
@@ -62,10 +61,20 @@ def init_user(request):
     newUser.save()
     return HttpResponse(status = status.HTTP_201_CREATED)
 
-class BookManager(viewsets.ViewSet):
+'''
+-------------------------------------------------------------------------------------------------------------------+
+                                                                                                                   |
+Book Manager                                                                                                       |
+                                                                                                                   |
+-------------------------------------------------------------------------------------------------------------------+
+'''
+
+class BookManager(viewsets.GenericViewSet):
 
     authentication_classes = [TokenAuthentication]
     safe_actions = ('list', 'retrieve')
+    lookup_field = 'isbn'
+    queryset = Book.objects.all()
 
     def get_permissions(self):
         if self.action in self.safe_actions:
@@ -89,19 +98,16 @@ class BookManager(viewsets.ViewSet):
 
         try: 
             b = Book.objects.get(isbn = request.data['isbn'], classes = user.classM)
-            print('A')
             return HttpResponse(status = status.HTTP_201_CREATED)
         except Book.DoesNotExist:
             try:     
-               b = Book.objects.get(isbn = request.data['isbn'])
-               print('B')
-               b.classes.add(user.classM)
-               return HttpResponse(status = status.HTTP_201_CREATED)
+                b = Book.objects.get(isbn = request.data['isbn'])
+                b.classes.add(user.classM)
+                return HttpResponse(status = status.HTTP_201_CREATED)
             except Book.DoesNotExist:
                 b = Book.objects.create(title = request.data['title'], author = request.data['author'], isbn = request.data['isbn'])
-                print('C')
                 b.save()
-                #b.classes.add(user.classM)
+                b.classes.add(user.classM)
                 return HttpResponse(status = status.HTTP_201_CREATED)
   
     '''
@@ -109,11 +115,60 @@ class BookManager(viewsets.ViewSet):
     '''
 
     def list(self, request):
-        queryset = Book.objects.all()
-        serializer = BookSerializer(queryset, many = True)
+        serializer = BookSerializer(self.get_queryset(), many = True)
         return JsonResponse(serializer.data, status = status.HTTP_200_OK, safe = False)
 
+    def retrieve(self, request, *args, **kwargs):
+        book = self.get_object()
+        serializer = BookSerializer(book, many = False)
+        return JsonResponse(serializer.data, status = status.HTTP_200_OK, safe = False)
     
+'''
+-------------------------------------------------------------------------------------------------------------------+
+                                                                                                                   |
+Ad Manager                                                                                                       |
+                                                                                                                   |
+-------------------------------------------------------------------------------------------------------------------+
+'''
+
+class AdManager(viewsets.GenericViewSet):
+    authentication_classes = [TokenAuthentication]
+    safe_actions = ('list', 'retrieve')
+    queryset = Ad.objects.all()
+    serializer_class = AdSerializer
+
+    def get_permissions(self):
+        if self.action in self.safe_actions:
+            permission_classes = [AllowAny]
+        else:
+            permission_classes = [IsAuthenticated] 
+        return [permission() for permission in permission_classes]
+
+    def create(self, request):
+        user = GnumaUser.objects.get(user = request.user)
+        book = Book.objects.get(isbn = request.data['isbn'])
+        title = request.data['title']
+        price = request.data['price']
+        newAd = Ad.objects.create(title = title, price = price, book = book, seller = user)
+        newAd.save()
+        return HttpResponse(status = status.HTTP_201_CREATED)
+    
+    def retrieve(self, request, *args, **kwargs):
+        ad = self.get_object()
+        serializer = self.get_serializer_class()(ad, many = False)
+        return JsonResponse(serializer.data, status = status.HTTP_200_OK, safe = False)
+
+    @action(detail = False, methods = ['post'])
+    def search(self, request):
+        '''
+        To be defined.
+        '''
+    @action(detail = False, methods = ['post'])
+    def geo_search(self, request):
+        '''
+        To be defined.
+        '''
+        
 
         
 
