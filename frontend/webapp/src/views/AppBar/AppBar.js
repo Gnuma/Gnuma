@@ -13,6 +13,40 @@ import * as searchActions from "../../store/actions/search";
 export class AppBar extends Component {
   constructor(props) {
     super(props);
+
+    let searchQuery = this.props.searchQuery;
+    if (searchQuery === null) {
+      searchQuery = this.props.match.params.search_query;
+      if (searchQuery === undefined) {
+        searchQuery = "";
+      }
+    }
+    this.state = {
+      searchQuery,
+      subList: [
+        {
+          id: 0,
+          name: "Qualsiasi Materia"
+        },
+        {
+          id: 1,
+          name: "Matematica"
+        },
+        {
+          id: 2,
+          name: "Italiano"
+        },
+        {
+          id: 3,
+          name: "Inglese"
+        }
+      ],
+      user: {
+        uid: "Francesco",
+        school: "J. Von Neumann"
+      }
+    };
+
     this.handleChangeQuery = this.handleChangeQuery.bind(this);
   }
 
@@ -20,42 +54,6 @@ export class AppBar extends Component {
     isAuthenticated: PropTypes.bool,
     searchQuery: PropTypes.string
   };
-
-  state = {
-    subList: [
-      {
-        id: 0,
-        name: "Qualsiasi Materia"
-      },
-      {
-        id: 1,
-        name: "Matematica"
-      },
-      {
-        id: 2,
-        name: "Italiano"
-      },
-      {
-        id: 3,
-        name: "Inglese"
-      }
-    ],
-    user: {
-      uid: "Francesco",
-      school: "J. Von Neumann"
-    }
-  };
-
-  componentDidMount() {
-    let searchQuery = this.props.searchQuery;
-    if (searchQuery === null) {
-      searchQuery = this.props.match.params.search_query;
-    }
-
-    this.setState({
-      searchQuery
-    });
-  }
 
   render() {
     const { subList, searchQuery } = this.state;

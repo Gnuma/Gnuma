@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import PropTypes from "prop-types";
 import searchLogo from "../../media/vectors/search-lens.svg";
 import DropDown from "../Inputs/DropDownList/DropDownList";
 
@@ -10,6 +11,11 @@ export default class SearchBar extends Component {
     this.unfocusBar = this.unfocusBar.bind(this);
     this.submitSearch = this.submitSearch.bind(this);
   }
+
+  static propTypes = {
+    handleChangeQuery: PropTypes.func,
+    searchQuery: PropTypes.string
+  };
 
   state = {
     isFocused: false,
