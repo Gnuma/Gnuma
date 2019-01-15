@@ -1,4 +1,5 @@
 import * as actionTypes from "./actionTypes";
+import { push } from "connected-react-router";
 import axios from "axios";
 
 export const searchStart = search_query => {
@@ -67,5 +68,6 @@ export const search = (search_query, cap) => {
       }
     ];
     dispatch(searchSuccess(results));
+    dispatch(push(`/s=${search_query}`));
   };
 };

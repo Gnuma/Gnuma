@@ -11,11 +11,7 @@ class App extends Component {
   }
 
   render() {
-    return (
-      <Router>
-        <BaseRouter />
-      </Router>
-    );
+    return <BaseRouter />;
   }
 }
 
