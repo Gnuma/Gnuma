@@ -11,8 +11,14 @@ import * as authActions from "../../store/actions/auth";
 import * as searchActions from "../../store/actions/search";
 
 export class AppBar extends Component {
+  constructor(props) {
+    super(props);
+    this.handleChangeQuery = this.handleChangeQuery.bind(this);
+  }
+
   static propTypes = {
-    isAuthenticated: PropTypes.bool
+    isAuthenticated: PropTypes.bool,
+    searchQuery: PropTypes.string
   };
 
   state = {
@@ -40,9 +46,20 @@ export class AppBar extends Component {
     }
   };
 
+  componentDidMount() {
+    let searchQuery = this.props.searchQuery;
+    if (searchQuery === null) {
+      searchQuery = this.props.match.params.search_query;
+    }
+
+    this.setState({
+      searchQuery
+    });
+  }
+
   render() {
-    const { subList } = this.state;
-    const { isAuthenticated, logout, match, history, search } = this.props;
+    const { subList, searchQuery } = this.state;
+    const { isAuthenticated, logout, search } = this.props;
 
     return (
       <nav className="app-bar">
@@ -51,13 +68,20 @@ export class AppBar extends Component {
         </NavLink>
         <SearchBar
           search={search}
-          searchQuery={match.params.search_query}
+          searchQuery={searchQuery}
+          handleChangeQuery={this.handleChangeQuery}
           subList={subList}
         />
         <SchoolBar school={undefined} />
         <UserBar isAuthenticated={isAuthenticated} logout={logout} />
       </nav>
     );
+  }
+
+  handleChangeQuery(e) {
+    this.setState({
+      searchQuery: e.target.value
+    });
   }
 }
 

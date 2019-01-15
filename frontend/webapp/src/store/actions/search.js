@@ -68,6 +68,7 @@ export const search = (search_query, cap) => {
       }
     ];
     dispatch(searchSuccess(results));
-    dispatch(push(`/s=${search_query}`));
+    if (search_query !== null) dispatch(push(`/s=${search_query}`));
+    else dispatch(push(`/`));
   };
 };

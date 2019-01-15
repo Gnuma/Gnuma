@@ -8,15 +8,13 @@ export default class SearchBar extends Component {
     this.select = this.select.bind(this);
     this.focusBar = this.focusBar.bind(this);
     this.unfocusBar = this.unfocusBar.bind(this);
-    this.handleChange = this.handleChange.bind(this);
-    this.search = this.search.bind(this);
+    this.submitSearch = this.submitSearch.bind(this);
   }
 
   state = {
     isFocused: false,
     selectedSub: this.props.subList[0],
-    subList: this.props.subList,
-    value: this.props.searchQuery !== undefined ? this.props.searchQuery : ""
+    subList: this.props.subList
   };
 
   select(subject) {
@@ -24,9 +22,10 @@ export default class SearchBar extends Component {
   }
 
   render() {
-    const { subList, isFocused, selectedSub, value } = this.state;
+    const { subList, isFocused, selectedSub } = this.state;
+    const { handleChangeQuery, searchQuery } = this.props;
     return (
-      <form className="search-bar" onSubmit={this.search}>
+      <form className="search-bar" onSubmit={this.submitSearch}>
         <DropDown
           list={subList}
           selected={selectedSub}
@@ -41,8 +40,8 @@ export default class SearchBar extends Component {
           }
           onFocus={this.focusBar}
           onBlur={this.unfocusBar}
-          onChange={this.handleChange}
-          value={value}
+          onChange={handleChangeQuery}
+          value={searchQuery}
         />
         <button
           className={
@@ -56,13 +55,13 @@ export default class SearchBar extends Component {
     );
   }
 
-  search(e) {
+  submitSearch(e) {
     e.preventDefault();
-    const searchUrl = this.state.value;
+    const searchUrl = this.props.searchQuery;
     if (searchUrl) {
       this.props.search(searchUrl, "00012");
     } else {
-      this.props.search("", "00012");
+      this.props.search(null, "00012");
     }
   }
 
@@ -75,12 +74,6 @@ export default class SearchBar extends Component {
   unfocusBar() {
     this.setState({
       isFocused: false
-    });
-  }
-
-  handleChange(e) {
-    this.setState({
-      value: e.target.value
     });
   }
 }
