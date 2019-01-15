@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { BrowserRouter as Router } from "react-router-dom";
 import { connect } from "react-redux";
-import BaseRouter from "./routes";
+import BaseRouter from "./routing/routes";
 import * as actions from "./store/actions/auth";
 import "./icons";
 

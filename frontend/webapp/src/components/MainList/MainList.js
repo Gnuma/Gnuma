@@ -1,11 +1,10 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import { connect } from "react-redux";
 import "./MainList.scss";
 import InfoBar from "../../components/InfoBar/InfoBar";
 import FilterPanel from "../../components/FilterPanel/FilterPanel";
 import ResultFilter from "../../components/ListResultFilter/ListResultFilter";
-import ListVoice from "../../components/ListVoice/ListVoice";
+import ListItem from "../../components/ListItem/ListItem";
 
 export class MainList extends Component {
   state = {
@@ -88,7 +87,7 @@ export class MainList extends Component {
               nResults="1450"
             />
             {results.map(item => (
-              <ListVoice key={item.id} {...item} />
+              <ListItem key={item.id} {...item} />
             ))}
           </div>
         </div>
@@ -97,11 +96,4 @@ export class MainList extends Component {
   }
 }
 
-const mapStateToProps = state => ({});
-
-const mapDispatchToProps = {};
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(MainList);
+export default MainList;

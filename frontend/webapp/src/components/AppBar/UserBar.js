@@ -2,10 +2,10 @@ import React from "react";
 import { NavLink } from "react-router-dom";
 
 export default function UserBar(props) {
-  const { user } = props;
+  const { user, isAuthenticated, logout } = props;
   return (
     <div className="user-bar">
-      {user === undefined ? (
+      {!isAuthenticated ? (
         <div className="log-sig">
           <NavLink to="/login">
             <span>Login</span>
@@ -16,7 +16,7 @@ export default function UserBar(props) {
           </NavLink>
         </div>
       ) : (
-        <span>{user.name}</span>
+        <button onClick={logout}>Logout</button>
       )}
     </div>
   );

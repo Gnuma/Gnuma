@@ -1,14 +1,20 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { NavLink } from "react-router-dom";
+import { NavLink, withRouter, Route } from "react-router-dom";
 import SearchBar from "../../components/AppBar/SearchBar";
 import SchoolBar from "../../components/AppBar/SchoolBar";
 import UserBar from "../../components/AppBar/UserBar";
 import logo from "../../media/vectors/logo.svg";
 import "./AppBar.scss";
+import * as authActions from "../../store/actions/auth";
+import * as searchActions from "../../store/actions/search";
 
 export class AppBar extends Component {
+  static propTypes = {
+    isAuthenticated: PropTypes.bool
+  };
+
   state = {
     subList: [
       {
@@ -36,28 +42,41 @@ export class AppBar extends Component {
 
   render() {
     const { subList } = this.state;
-    const { isAuthenticated } = this.props;
+    const { isAuthenticated, logout, match, history, search } = this.props;
 
     return (
       <nav className="app-bar">
-        <NavLink to="/search" className="logo">
+        <NavLink to="/" className="logo">
           <img src={logo} alt="Logo" />
         </NavLink>
-        <SearchBar subList={subList} />
+        <SearchBar
+          search={search}
+          searchQuery={match.params.search_query}
+          subList={subList}
+        />
         <SchoolBar school={undefined} />
-        <UserBar isAuthenticated={isAuthenticated} />
+        <UserBar isAuthenticated={isAuthenticated} logout={logout} />
       </nav>
     );
   }
 }
 
 const mapStateToProps = state => ({
-  isAuthenticated: state.token !== null
+  isAuthenticated: state.auth.token !== null,
+  searchQuery: state.search.searchQuery
 });
 
-const mapDispatchToProps = {};
+const mapDispatchToProps = dispatch => {
+  return {
+    logout: () => dispatch(authActions.authLogout()),
+    search: (search_query, cap) =>
+      dispatch(searchActions.search(search_query, cap))
+  };
+};
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(AppBar);
+export default withRouter(
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )(AppBar)
+);

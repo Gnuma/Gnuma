@@ -7,9 +7,7 @@ export default class TextField extends Component {
   }
 
   state = {
-    isFocused: false,
-    hasError: false,
-    errorMessage: ""
+    isFocused: false
   };
 
   render() {
@@ -28,19 +26,12 @@ export default class TextField extends Component {
           id={id}
           onChange={onChange}
           value={value}
-          className={this.state.hasError ? "error" : null}
-          onFocus={() => {
-            this.focusLabel();
-          }}
-          onBlur={() => {
-            this.unfocusLabel();
-            if (validators !== undefined) {
-              this.checkInput(value, validators);
-            }
-          }}
+          className={errorMessage ? "error" : null}
+          onFocus={this.focusLabel}
+          onBlur={this.unfocusLabel}
         />
-        {this.state.hasError ? (
-          <span className="error-message">{this.state.errorMessage}</span>
+        {errorMessage ? (
+          <span className="error-message">{errorMessage}</span>
         ) : null}
       </div>
     );
@@ -56,27 +47,5 @@ export default class TextField extends Component {
     this.setState({
       isFocused: false
     });
-  };
-
-  checkInput = (value, validators) => {
-    const errorFunctions = validators.functions;
-    const errorMessages = validators.warnings;
-    let hasError = false;
-    for (let i = 0; i < errorFunctions.length; i++) {
-      hasError = errorFunctions[i](value);
-      if (hasError) {
-        this.setState({
-          errorMessage: errorMessages[i],
-          hasError: true
-        });
-        hasError = true;
-        break;
-      }
-    }
-    if (!hasError) {
-      this.setState({
-        hasError: false
-      });
-    }
   };
 }

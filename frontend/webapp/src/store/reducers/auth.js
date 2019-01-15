@@ -14,7 +14,7 @@ const authStart = (state, action) => {
   });
 };
 
-const authSuccess = (state, action) => {
+const loginSuccess = (state, action) => {
   return updateObject(state, {
     token: action.payload.token,
     error: null,
@@ -29,9 +29,11 @@ const authFail = (state, action) => {
   });
 };
 
-const authLogout = (state, action) => {
-  updateObject(state, {
-    token: null
+const logoutSuccess = (state, action) => {
+  return updateObject(state, {
+    token: null,
+    error: null,
+    loading: false
   });
 };
 
@@ -40,14 +42,14 @@ const reducer = (state = initialState, action) => {
     case actionTypes.AUTH_START:
       return authStart(state, action);
 
-    case actionTypes.AUTH_SUCCESS:
-      return authSuccess(state, action);
+    case actionTypes.LOGIN_SUCCESS:
+      return loginSuccess(state, action);
 
     case actionTypes.AUTH_FAIL:
       return authFail(state, action);
 
-    case actionTypes.AUTH_LOGOUT:
-      return authLogout(state, action);
+    case actionTypes.LOGOUT_SUCCESS:
+      return logoutSuccess(state, action);
 
     default:
       return state;
