@@ -31,7 +31,7 @@ export default class SearchBar extends Component {
     const { subList, isFocused, selectedSub } = this.state;
     const { handleChangeQuery, searchQuery } = this.props;
     return (
-      <form className="search-bar" onSubmit={this.submitSearch}>
+      <form className="appbar-search-bar" onSubmit={this.submitSearch}>
         <DropDown
           list={subList}
           selected={selectedSub}

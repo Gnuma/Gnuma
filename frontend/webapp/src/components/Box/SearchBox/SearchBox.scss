@@ -1,0 +1,19 @@
+@import "../../../style/helper.scss";
+
+.box {
+  width: 100%;
+  .box-content {
+    display: block;
+    border: solid 2px color(primary);
+    border-bottom-right-radius: 8px;
+    border-bottom-left-radius: 8px;
+    border-top: none;
+    overflow: hidden;
+    transition: 0.4s;
+    max-height: 0;
+    visibility: hidden;
+  }
+  .box-content.active {
+    visibility: visible;
+  }
+}
