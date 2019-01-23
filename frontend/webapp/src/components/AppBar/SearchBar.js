@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import searchLogo from "../../media/vectors/search-lens.svg";
 import DropDown from "../Inputs/DropDownList/DropDownList";
+import SchoolSelection from "./SchoolSelection";
 
 export default class SearchBar extends Component {
   constructor(props) {
@@ -31,33 +32,29 @@ export default class SearchBar extends Component {
     const { subList, isFocused, selectedSub } = this.state;
     const { handleChangeQuery, searchQuery } = this.props;
     return (
-      <form className="appbar-search-bar" onSubmit={this.submitSearch}>
-        <DropDown
-          list={subList}
-          selected={selectedSub}
-          select={this.select}
-          style="appbar-drp-list"
-          focused={isFocused}
-        />
-        <input
-          type="text"
-          className={
-            "search-input " + (isFocused ? "search-input-focused" : "")
-          }
-          onFocus={this.focusBar}
-          onBlur={this.unfocusBar}
-          onChange={handleChangeQuery}
-          value={searchQuery}
-        />
-        <button
-          className={
-            "search-submit " + (isFocused ? "search-submit-focused" : "")
-          }
-          type="submit"
-        >
-          <img src={searchLogo} alt="search" />
-        </button>
-      </form>
+      <div className="appbar-search-bar-container">
+        <SchoolSelection />
+        <form className="appbar-search-bar" onSubmit={this.submitSearch}>
+          <input
+            type="text"
+            className={
+              "search-input " + (isFocused ? "search-input-focused" : "")
+            }
+            onFocus={this.focusBar}
+            onBlur={this.unfocusBar}
+            onChange={handleChangeQuery}
+            value={searchQuery}
+          />
+          <button
+            className={
+              "search-submit " + (isFocused ? "search-submit-focused" : "")
+            }
+            type="submit"
+          >
+            <img src={searchLogo} alt="search" />
+          </button>
+        </form>
+      </div>
     );
   }
 

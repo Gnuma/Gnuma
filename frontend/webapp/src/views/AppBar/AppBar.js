@@ -3,7 +3,6 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { NavLink, withRouter, Route } from "react-router-dom";
 import SearchBar from "../../components/AppBar/SearchBar";
-import SchoolBar from "../../components/AppBar/SchoolBar";
 import UserBar from "../../components/AppBar/UserBar";
 import logo from "../../media/vectors/logo.svg";
 import "./AppBar.scss";
@@ -60,19 +59,20 @@ export class AppBar extends Component {
     const { isAuthenticated, logout, search } = this.props;
 
     return (
-      <nav className="app-bar">
-        <NavLink to="/" className="logo">
-          <img src={logo} alt="Logo" />
-        </NavLink>
-        <SearchBar
-          search={search}
-          searchQuery={searchQuery}
-          handleChangeQuery={this.handleChangeQuery}
-          subList={subList}
-        />
-        <SchoolBar school={undefined} />
-        <UserBar isAuthenticated={isAuthenticated} logout={logout} />
-      </nav>
+      <header className="app-bar">
+        <div className="app-bar-content">
+          <NavLink to="/" className="logo">
+            <img src={logo} alt="Logo" />
+          </NavLink>
+          <SearchBar
+            search={search}
+            searchQuery={searchQuery}
+            handleChangeQuery={this.handleChangeQuery}
+            subList={subList}
+          />
+          <UserBar isAuthenticated={isAuthenticated} logout={logout} push={this.props.history.push}/>
+        </div>
+      </header>
     );
   }
 

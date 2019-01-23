@@ -5,7 +5,7 @@ import { connect } from "react-redux";
 
 function Search(props) {
   return (
-    <div>
+    <div className="view">
       <AppBar />
       <MainList {...props} />
     </div>

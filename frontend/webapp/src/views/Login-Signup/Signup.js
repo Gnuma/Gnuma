@@ -51,7 +51,7 @@ export class Signup extends Component {
     if (this.props.isAuthenticated) this.props.history.goBack();
     const { uid, pwd, email, confirmPwd } = this.state.fields;
     return (
-      <form onSubmit={this.signup} className="center-panel">
+      <form onSubmit={this.signup} className="view center-panel">
         <TextField
           label="Nome Utente"
           onChange={this.handleChange}

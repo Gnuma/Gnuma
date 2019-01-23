@@ -36,7 +36,7 @@ export class Login extends Component {
     if (this.props.isAuthenticated) this.props.history.goBack();
     const { uid, pwd } = this.state.fields;
     return (
-      <form onSubmit={this.login} className="center-panel">
+      <form onSubmit={this.login} className="view center-panel">
         <TextField
           label="Email o nome utente"
           onChange={this.handleChange}

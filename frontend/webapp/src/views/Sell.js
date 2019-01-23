@@ -5,7 +5,7 @@ import MainSell from "../components/MainSell/MainSell";
 
 function Sell(props) {
   return (
-    <div>
+    <div className="view">
       <MainSell />
     </div>
   );

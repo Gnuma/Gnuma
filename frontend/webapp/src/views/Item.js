@@ -36,7 +36,7 @@ function Item(props) {
     item: item
   };
   return (
-    <div>
+    <div className="view">
       <AppBar />
       <MainItem {...props} />
     </div>

@@ -5,7 +5,7 @@ import { connect } from "react-redux";
 
 function Home(props) {
   return (
-    <div>
+    <div className="view">
       <AppBar />
       Home
     </div>

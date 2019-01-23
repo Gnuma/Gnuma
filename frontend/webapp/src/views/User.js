@@ -6,7 +6,7 @@ import UserAccount from "../components/UserAccount/UserAccount";
 
 function User(props) {
   return (
-    <div>
+    <div className="view">
       <AppBar />
       <UserAccount props={props} />
     </div>
