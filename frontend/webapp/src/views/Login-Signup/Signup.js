@@ -46,7 +46,7 @@ export class Signup extends Component {
       }
     }
   };
-
+  //Change
   render() {
     if (this.props.isAuthenticated) this.props.history.goBack();
     const { uid, pwd, email, confirmPwd } = this.state.fields;
