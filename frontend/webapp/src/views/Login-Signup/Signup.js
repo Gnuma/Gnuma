@@ -9,7 +9,7 @@ import {
 } from "../../components/Inputs/Form/errorFunctions";
 import { submit } from "../../components/Inputs/Form/formHelper";
 import * as actions from "../../store/actions/auth";
-
+import ShortLogo from "../../media/vectors/ShortLogo.svg";
 export class Signup extends Component {
   constructor(props) {
     super(props);
@@ -28,6 +28,14 @@ export class Signup extends Component {
 
   state = {
     fields: {
+      name:{
+        value: "",
+        errorMessage: ""
+      },
+      surname:{
+        value: "",
+        errorMessage: ""
+      },
       uid: {
         value: "",
         errorMessage: ""
@@ -49,39 +57,71 @@ export class Signup extends Component {
 
   render() {
     if (this.props.isAuthenticated) this.props.history.goBack();
-    const { uid, pwd, email, confirmPwd } = this.state.fields;
+    const { name, surname, uid, pwd, email, confirmPwd } = this.state.fields;
     return (
-      <form onSubmit={this.signup} className="center-panel">
-        <TextField
-          label="Nome Utente"
-          onChange={this.handleChange}
-          type="text"
-          id="uid"
-          state={uid}
-        />
-        <TextField
-          label="Email"
-          onChange={this.handleChange}
-          type="text"
-          id="email"
-          state={email}
-        />
-        <TextField
-          label="Password"
-          onChange={this.handleChange}
-          type="password"
-          id="pwd"
-          state={pwd}
-        />
-        <TextField
-          label="Confirm Password"
-          onChange={this.handleChange}
-          type="password"
-          id="confirmPwd"
-          state={confirmPwd}
-        />
-        <input type="submit" className="std-btn" value="Signup" />
-      </form>
+      <div className="container">
+        <div className="divSX">
+          <div className="logo">
+            <img src={ShortLogo} />
+            <span id="Gnuma">Gnuma</span>
+          </div>
+
+          <form onSubmit={this.signup} className="center-panel">
+          <TextField
+              label="Nome"
+              onChange={this.handleChange}
+              type="text"
+              id="name"
+              state={name}
+            />
+            <TextField
+              label="Cognome"
+              onChange={this.handleChange}
+              type="text"
+              id="surname"
+              state={surname}
+            />
+            <TextField
+              label="Nome Utente"
+              onChange={this.handleChange}
+              type="text"
+              id="uid"
+              state={uid}
+            />
+            <TextField
+              label="Email"
+              onChange={this.handleChange}
+              type="text"
+              id="email"
+              state={email}
+            />
+            <TextField
+              label="Password"
+              onChange={this.handleChange}
+              type="password"
+              id="pwd"
+              state={pwd}
+            />
+            <TextField
+              label="Conferma Password"
+              onChange={this.handleChange}
+              type="password"
+              id="confirmPwd"
+              state={confirmPwd}
+            />
+            <label  className="condizioni">
+              <input type="checkbox" name="condizioni"></input>
+              <span className="checkmark"></span>
+              <span>Accetto le <a href="https://en.wikipedia.org/wiki/Terms_of_service">condizioni</a></span><br/>
+            </label>
+            <input  style={{marginTop: 15}} type="submit" className="std-btn" value="Signup" />   
+          </form>
+          <span>oppure</span>
+          <hr className="blueLine" />
+          <span><a href="/login">Hai gia un account?</a></span>
+        </div>
+        <div className="divDX" />
+      </div>
     );
   }
 
@@ -143,9 +183,17 @@ export default connect(
 )(Signup);
 
 let validators = {
+  name: {
+    functions: [isEmpty],
+    warnings: ["Inserisci il tuo nome."]
+  },
+  surname: {
+    functions: [isEmpty],
+    warnings: ["Inserisci il tuo cognome."]
+  },
   uid: {
     functions: [isEmpty],
-    warnings: ["Inserisci il nome."]
+    warnings: ["Inserisci il nome utente."]
   },
   email: {
     functions: [isEmpty, isInvaildEmail],

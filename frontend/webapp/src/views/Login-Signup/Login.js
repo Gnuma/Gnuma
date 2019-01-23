@@ -4,6 +4,7 @@ import { connect } from "react-redux";
 import { Link, withRouter } from "react-router-dom";
 import TextField from "../../components/Inputs/TextField/TextField";
 import "./Login-Signup.scss";
+import "./LoginOnly.scss";
 import { submit } from "../../components/Inputs/Form/formHelper";
 import { isEmpty } from "../../components/Inputs/Form/errorFunctions";
 import * as actions from "../../store/actions/auth";
@@ -36,23 +37,28 @@ export class Login extends Component {
     if (this.props.isAuthenticated) this.props.history.goBack();
     const { uid, pwd } = this.state.fields;
     return (
-      <form onSubmit={this.login} className="center-panel">
-        <TextField
-          label="Email o nome utente"
-          onChange={this.handleChange}
-          type="text"
-          state={uid}
-          id="uid"
-        />
-        <TextField
-          label="Password"
-          onChange={this.handleChange}
-          state={pwd}
-          type="password"
-          id="pwd"
-        />
-        <input type="submit" className="std-btn" value="Accedi" />
-      </form>
+      <div className="container">
+        <div className="divSX" />
+        <div className="divDX">
+          <form onSubmit={this.login} className="center-panel">
+            <TextField
+              label="Email o nome utente"
+              onChange={this.handleChange}
+              type="text"
+              state={uid}
+              id="uid"
+            />
+            <TextField
+              label="Password"
+              onChange={this.handleChange}
+              state={pwd}
+              type="password"
+              id="pwd"
+            />
+            <input type="submit" className="std-btn" value="login" />
+          </form>
+        </div>
+      </div>
     );
   }
 
