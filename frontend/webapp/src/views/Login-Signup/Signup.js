@@ -142,7 +142,6 @@ export class Signup extends Component {
     e.preventDefault();
 
     const fields = this.state.fields;
-
     const username = fields.uid.value;
     const email = fields.email.value;
     const password1 = fields.pwd.value;

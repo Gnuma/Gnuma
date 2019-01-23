@@ -73,10 +73,18 @@
   text-decoration: line-through;
 }
 
+.l-regular {
+  font-weight: weight(light-regular);
+}
+
 .highlight {
   font-size: 14px;
   color: color(primary);
   font-weight: weight(bold);
+}
+
+.underlined {
+  text-decoration: underline;
 }
 
 button:hover {

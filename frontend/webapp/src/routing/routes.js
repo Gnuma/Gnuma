@@ -9,6 +9,7 @@ import Home from "../views/Home";
 import Search from "../views/Search";
 import User from "../views/User";
 import Item from "../views/Item";
+import Sell from "../views/Sell";
 
 const BaseRouter = () => (
   <div id="base-router">
@@ -17,6 +18,7 @@ const BaseRouter = () => (
     <Route exact path="/login" component={Login} />
     <Route exact path="/signup" component={Signup} />
     <Route exact path="/view/:item_id" component={Item} />
+    <Route exact path="/vendi" component={Sell} />
     <ProtectedRoute exact path="/user" component={User} />
   </div>
 );

@@ -12,9 +12,13 @@ export default class TextField extends Component {
 
   render() {
     const { label, onChange, id, type, state } = this.props;
+    let { className } = this.props;
     const { value, errorMessage } = state;
+
+    if (className === undefined) className = "text-field";
+
     return (
-      <div className="text-field">
+      <div className={className}>
         <label
           htmlFor={id}
           className={this.state.isFocused || value ? "active-label" : ""}

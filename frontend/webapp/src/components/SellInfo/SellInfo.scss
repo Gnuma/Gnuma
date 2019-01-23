@@ -1,0 +1,68 @@
+@import "../../style/helper.scss";
+
+.sell-informations-list {
+  grid-column: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  .book-box {
+    margin-top: 80px;
+
+    .book-container {
+      padding: 20px;
+      display: grid;
+      grid-template-columns: 170px auto 60px;
+
+      > img {
+        width: 150px;
+      }
+    }
+  }
+
+  .office-box {
+    .office-container {
+      padding: 20px;
+      display: grid;
+      grid-template-columns: auto 60px;
+    }
+  }
+
+  .box {
+    .box-content > div {
+      cursor: pointer;
+      border-bottom: solid 1px color(grey);
+
+      .radio-button {
+        margin: auto;
+      }
+    }
+
+    .box-content > div:hover > div > .info-title {
+      transition: 0.2s;
+      font-size: 24px;
+      text-decoration: underline;
+    }
+
+    .box-content > div:last-child {
+      border-bottom: none;
+    }
+  }
+
+  .info-box {
+    .box-content {
+      padding: 20px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      .info-box-right-col {
+        margin-left: 40px;
+        display: grid;
+        grid-template-columns: 100px auto;
+        grid-template-rows: 50px 50px;
+        align-items: center;
+      }
+    }
+  }
+}
