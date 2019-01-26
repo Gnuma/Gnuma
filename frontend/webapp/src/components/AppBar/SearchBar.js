@@ -44,6 +44,7 @@ export default class SearchBar extends Component {
             onBlur={this.unfocusBar}
             onChange={handleChangeQuery}
             value={searchQuery}
+            placeholder="Cerca i tuoi libri"
           />
           <button
             className={

@@ -43,25 +43,31 @@ export default class ListItem extends Component {
             </Link>
           </div>
           <div className="info-list">
-            <Link to={`/view/${id}`}>
-              <h1
-                className={"m-title " + (this.state.focused ? "focused" : "")}
-                onMouseEnter={this.focus}
-                onMouseLeave={this.unfocus}
-              >
-                {name}
-              </h1>
-            </Link>
-            <h1 className="s-subtitle">di {authors}</h1>
-            <Link to={`/view/${id}`}>
-              <h1
-                className="lg-title"
-                onMouseEnter={this.focus}
-                onMouseLeave={this.unfocus}
-              >
-                EUR {price}
-              </h1>
-            </Link>
+            <div className="row-spacing">
+              <Link to={`/view/${id}`}>
+                <h1
+                  className={"m-title " + (this.state.focused ? "focused" : "")}
+                  onMouseEnter={this.focus}
+                  onMouseLeave={this.unfocus}
+                >
+                  {name}
+                </h1>
+              </Link>
+            </div>
+            <div className="row-spacing">
+              <h1 className="s-subtitle">di {authors}</h1>
+            </div>
+            <div className="row-spacing price-tag">
+              <Link to={`/view/${id}`}>
+                <h1
+                  className="lg-title"
+                  onMouseEnter={this.focus}
+                  onMouseLeave={this.unfocus}
+                >
+                  EUR {price}
+                </h1>
+              </Link>
+            </div>
           </div>
         </div>
       </div>

@@ -2,6 +2,7 @@ import React from "react";
 import AppBar from "./AppBar/AppBar";
 import MainList from "../components/MainList/MainList";
 import { connect } from "react-redux";
+import { withRouter } from "react-router-dom";
 
 function Search(props) {
   return (
@@ -14,11 +15,15 @@ function Search(props) {
 
 Search.propTypes = {};
 
-const mapStateToProps = state => ({});
+const mapStateToProps = state => ({
+  results: state.search.results
+});
 
 const mapDispatchToProps = {};
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(Search);
+export default withRouter(
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )(Search)
+);

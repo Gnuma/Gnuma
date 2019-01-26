@@ -39,6 +39,7 @@ class DropDownList extends Component {
           className={"drp-btn " + (focused ? "drp-focused" : "")}
           type="button"
           onClick={this.showList}
+          onMouseDown={this.showList}
         >
           <span className="drp-btn-selected">{selected.name}</span>
           <span className="clr-p chevron-drp">

@@ -13,11 +13,13 @@ export class AppBar extends Component {
   constructor(props) {
     super(props);
 
-    let searchQuery = this.props.searchQuery;
+    let searchQuery = props.searchQuery;
     if (searchQuery === null) {
-      searchQuery = this.props.match.params.search_query;
+      searchQuery = props.match.params.search_query;
       if (searchQuery === undefined) {
         searchQuery = "";
+      } else {
+        props.search(searchQuery);
       }
     }
     this.state = {
@@ -70,7 +72,11 @@ export class AppBar extends Component {
             handleChangeQuery={this.handleChangeQuery}
             subList={subList}
           />
-          <UserBar isAuthenticated={isAuthenticated} logout={logout} push={this.props.history.push}/>
+          <UserBar
+            isAuthenticated={isAuthenticated}
+            logout={logout}
+            push={this.props.history.push}
+          />
         </div>
       </header>
     );

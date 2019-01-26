@@ -12,7 +12,15 @@
     .info-list {
       margin-left: 30px;
 
-      .lg-title {
+      .row-spacing {
+        display: block;
+
+        h1 {
+          display: inline;
+        }
+      }
+
+      .price-tag {
         margin: 20px 0;
       }
     }

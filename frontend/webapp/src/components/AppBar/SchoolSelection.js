@@ -43,6 +43,7 @@ class SchoolBar extends Component {
                   type="text"
                   className="search-input "
                   ref={ip => (this.src = ip)}
+                  placeholder="es: Giulio Cesare, Roma"
                 />
                 <button className="search-submit " type="submit">
                   <img src={searchLogo} alt="search" />

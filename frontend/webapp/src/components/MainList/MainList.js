@@ -8,29 +8,6 @@ import ListItem from "../../components/ListItem/ListItem";
 
 export class MainList extends Component {
   state = {
-    results: [
-      {
-        id: 0,
-        name: "Matematica Verde 3",
-        img: "",
-        authors: "Alessandro Borghesi, Francesca Maravilla",
-        price: 26
-      },
-      {
-        id: 1,
-        name: "Matematica Verde 3",
-        img: "",
-        authors: "Alessandro Borghesi, Francesca Maravilla",
-        price: 26
-      },
-      {
-        id: 2,
-        name: "Matematica Verde 3",
-        img: "",
-        authors: "Alessandro Borghesi, Francesca Maravilla",
-        price: 26
-      }
-    ],
     orderFilter: [
       {
         id: 0,
@@ -70,7 +47,9 @@ export class MainList extends Component {
   };
 
   render() {
-    const { orderFilter, subFilter, results } = this.state;
+    const { orderFilter, subFilter } = this.state;
+    const { results } = this.props;
+
     return (
       <div>
         <InfoBar
@@ -86,9 +65,9 @@ export class MainList extends Component {
               keyWord="Matematica Verde 3"
               nResults="1450"
             />
-            {results.map(item => (
-              <ListItem key={item.id} {...item} />
-            ))}
+            {results
+              ? results.map(item => <ListItem key={item.id} {...item} />)
+              : ""}
           </div>
         </div>
       </div>
