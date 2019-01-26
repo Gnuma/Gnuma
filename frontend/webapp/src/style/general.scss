@@ -1,0 +1,161 @@
+@import "./helper.scss";
+
+.skinny-title {
+  margin: 0;
+  font-weight: weight(light);
+  font-size: 16px;
+}
+
+.s-title {
+  margin: 0;
+  font-weight: weight(bold);
+  font-size: 18px;
+  color: color(primary);
+}
+
+.m-title {
+  margin: 0;
+  font-weight: weight(bold);
+  font-size: 22px;
+  color: color(primary);
+}
+
+.lg-title {
+  margin: 0;
+  font-weight: weight(bold);
+  font-size: 24px;
+  color: color(primary);
+}
+
+.xl-title {
+  margin: 0;
+  font-weight: weight(bold);
+  font-size: 28px;
+  color: color(primary);
+}
+
+.s-subtitle {
+  margin: 0;
+  font-weight: weight(regular);
+  font-size: 14px;
+  color: color(primary-black);
+}
+
+.xs-l-info {
+  margin: 0;
+  font-weight: weight(light);
+  font-size: 14px;
+  color: color(primary-black);
+}
+
+.std-field {
+  width: auto;
+  font-size: 12;
+  font-weight: weight(medium);
+  border: solid 2px color(primary);
+  border-radius: 4px;
+  padding: 2px 4px;
+}
+
+.clr-p {
+  color: color(primary) !important;
+}
+
+.clr-s {
+  color: color(secondary) !important;
+}
+
+.hide {
+  display: none !important;
+}
+
+.deleted {
+  text-decoration: line-through;
+}
+
+.l-regular {
+  font-weight: weight(light-regular);
+}
+
+.highlight {
+  font-size: 14px;
+  color: color(primary);
+  font-weight: weight(bold);
+}
+
+.underlined {
+  text-decoration: underline;
+}
+
+button:hover {
+  cursor: pointer;
+}
+
+.std-search-bar {
+  margin: 0;
+  display: block;
+
+  .search-input {
+    transition: all 0.2s;
+    border: solid 2px color(white);
+    border-right: none;
+    margin: 0;
+    height: 22px;
+    width: calc(100% - 70px);
+    font-size: 14px;
+    padding: 0px 10px;
+    outline: none;
+    border-top-left-radius: 4px;
+    border-bottom-left-radius: 4px;
+  }
+
+  .search-input:focus {
+    border: solid 2px color(secondary);
+    border-right: none;
+  }
+
+  .search-submit {
+    transition: 0.1s;
+    height: 26px;
+    width: 45px;
+    border: none;
+    outline: none;
+    vertical-align: bottom;
+    background: color(secondary);
+    border-top-right-radius: 4px;
+    border-bottom-right-radius: 4px;
+    border: solid 2px color(secondary);
+    border-left: none;
+
+    img {
+      height: 20px;
+      width: 20px;
+    }
+  }
+}
+
+.std-btn {
+  border: none;
+  background-color: color(primary);
+  color: color(white);
+  border-radius: $sb-border-rd;
+  padding: 8px 18px;
+  font-size: 16px;
+  transition: 0.2s;
+}
+
+.std-btn:hover {
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.25);
+}
+
+.buy-btn {
+  border: 4px solid color(secondary);
+  background-color: color(primary);
+  color: color(white);
+  font-weight: weight(bold);
+  border-radius: 8px;
+  height: 45px;
+  width: 230px;
+  font-size: 18px;
+  transition: 0.2s;
+}

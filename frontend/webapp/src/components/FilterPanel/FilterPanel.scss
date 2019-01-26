@@ -1,0 +1,33 @@
+@import "../../style/helper.scss";
+
+.filter-panel {
+  height: 100%;
+  padding: 20px;
+  .filter-box {
+    margin-bottom: 12px;
+    .skinny-title {
+      margin-bottom: 4px;
+      span {
+        display: inline-block;
+        width: 23px;
+        text-align: center;
+        font-size: 18px;
+        color: color(secondary);
+        padding-right: 5px;
+      }
+    }
+    .filter-box-content {
+      margin-left: 14px;
+
+      .inline-radio-text {
+        display: inline-grid;
+        grid-template-columns: 20px 60px 140px;
+        margin: 4px 0;
+        span {
+          margin: auto 0;
+          font-size: 14px;
+        }
+      }
+    }
+  }
+}

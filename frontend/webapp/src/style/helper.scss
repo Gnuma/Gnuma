@@ -1,0 +1,28 @@
+$primaryFont: "Roboto", sans-serif;
+$AppBarSize: 70px;
+
+$colors: (
+  primary: #114b5f,
+  secondary: #1ea67e,
+  white: #ffffff,
+  grey: #7c7c7c,
+  light-grey: #aaaaaa,
+  primary-black: #202020,
+  warning: #b33a3a,
+  primary-dark: #155c75
+);
+
+$sb-border-rd: 6px;
+$fontWeights: (
+  light: 300,
+  light-regular: 400,
+  regular: 500,
+  medium: 700,
+  bold: 800
+);
+@function color($color-name) {
+  @return map-get($colors, $color-name);
+}
+@function weight($weight-name) {
+  @return map-get($fontWeights, $weight-name);
+}

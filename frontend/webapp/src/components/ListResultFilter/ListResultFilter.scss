@@ -1,0 +1,25 @@
+@import "../../style/helper.scss";
+
+.list-result-filter {
+  display: block;
+  padding: 10px 10px;
+  border-bottom: solid 1px color(light-grey);
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.15);
+  .list-filter-block {
+    display: inline-block;
+    .label {
+      margin: 0 10px 0 20px;
+    }
+  }
+  .n-result-block {
+    display: block;
+    float: right;
+    font-weight: weight(light);
+    margin-top: 5px;
+    font-size: 14px;
+
+    span:last-child {
+      padding: 0 5px;
+    }
+  }
+}
