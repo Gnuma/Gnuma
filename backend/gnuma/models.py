@@ -64,7 +64,7 @@ class GnumaUser(models.Model):
 
 class Ad(models.Model):
     title = models.CharField(max_length = 200)
-    #Aggiungere immagine libro
+    image = models.CharField(max_length = 200)
     price = models.FloatField()
     book = models.ForeignKey(Book, on_delete = models.CASCADE)
     seller = models.ForeignKey(GnumaUser, on_delete = models.CASCADE)

@@ -4,6 +4,7 @@ from .serializers import BookSerializer, AdSerializer
 from django.http import HttpResponse, JsonResponse
 from rest_framework.authtoken.models import Token
 from django.contrib.auth.models import User
+from django.db.models import F
 from rest_framework.decorators import api_view, authentication_classes, action
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import  IsAuthenticated , AllowAny 
@@ -36,6 +37,8 @@ classM: 2 chars representing the user's class; make sure it's well formed, if it
 @api_view(['POST',])
 @authentication_classes([TokenAuthentication,])
 def init_user(request):
+    if 'key' not in request.data or 'classM' not in request.data or 'office' not in request.data:
+        return JsonResponse({"detail":"one or more arguments are missing!"}, status = status.HTTP_400_BAD_REQUEST)
     try:
         token = Token.objects.get(key = request.data['key'])
     except GnumaUser.DoesNotExist:
@@ -56,9 +59,11 @@ def init_user(request):
     except Class.DoesNotExist:
         #if the Class objects doesn't exits, it'll just create it
         c = Class.objects.create(division = division, grade = grade, office = office)
-    #Check if the user already exists
-    newUser = GnumaUser.objects.create(user = user, classM = c)
-    newUser.save()
+    try:
+        newUser = GnumaUser.objects.get(user = user, classM = c)
+    except GnumaUser.DoesNotExist:
+        newUser = GnumaUser.objects.create(user = user, classM = c)
+        newUser.save()
     return HttpResponse(status = status.HTTP_201_CREATED)
 
 '''
@@ -88,14 +93,13 @@ class BookManager(viewsets.GenericViewSet):
     The following method tries to create a Book instance.
     If the Book that is going to be created already exists, it just does nothing.
     '''
-
     def create(self, request):
         '''
         The user must be authenticated to get access to this view, so request.user necessarily exists.
         '''
-
+        if 'isbn' not in request.data or 'title' not in request.data or 'author' not in request.data:
+            return JsonResponse({"detail":"one or more arguments are missing!"}, status = status.HTTP_400_BAD_REQUEST)
         user = GnumaUser.objects.get(user = request.user)
-
         try: 
             b = Book.objects.get(isbn = request.data['isbn'], classes = user.classM)
             return HttpResponse(status = status.HTTP_201_CREATED)
@@ -113,7 +117,6 @@ class BookManager(viewsets.GenericViewSet):
     '''
     The following method lists all the Books instances.
     '''
-
     def list(self, request):
         serializer = BookSerializer(self.get_queryset(), many = True)
         return JsonResponse(serializer.data, status = status.HTTP_200_OK, safe = False)
@@ -126,14 +129,14 @@ class BookManager(viewsets.GenericViewSet):
 '''
 -------------------------------------------------------------------------------------------------------------------+
                                                                                                                    |
-Ad Manager                                                                                                       |
+Ad Manager                                                                                                         |
                                                                                                                    |
 -------------------------------------------------------------------------------------------------------------------+
 '''
 
 class AdManager(viewsets.GenericViewSet):
     authentication_classes = [TokenAuthentication]
-    safe_actions = ('list', 'retrieve')
+    safe_actions = ('list', 'retrieve','search','geo_search')
     queryset = Ad.objects.all()
     serializer_class = AdSerializer
 
@@ -145,6 +148,8 @@ class AdManager(viewsets.GenericViewSet):
         return [permission() for permission in permission_classes]
 
     def create(self, request):
+        if 'isbn' not in request.data or 'title' not in request.data or 'price' not in request.data:
+            return JsonResponse({"detail":"one or more arguments are missing!"}, status = status.HTTP_400_BAD_REQUEST)
         user = GnumaUser.objects.get(user = request.user)
         book = Book.objects.get(isbn = request.data['isbn'])
         title = request.data['title']
@@ -160,19 +165,67 @@ class AdManager(viewsets.GenericViewSet):
 
     @action(detail = False, methods = ['post'])
     def search(self, request):
-        '''
-        To be defined.
-        '''
+        e = Engine(model = Book, lookup_field = 'title', keyword = request.data['keyword'], geo = False)
+        book = e.get_candidates()
+        serializer = self.get_serializer_class()(Ad.objects.filter(book = book), many = True)
+        return JsonResponse(serializer.data, status=status.HTTP_200_OK, safe = False)
     @action(detail = False, methods = ['post'])
     def geo_search(self, request):
         '''
         To be defined.
         '''
         
+'''
+-------------------------------------------------------------------------------------------------------------------+
+                                                                                                                   |
+Ad Manager                                                                                                         |
+                                                                                                                   |
+-------------------------------------------------------------------------------------------------------------------+
+'''        
 
+class Engine:
+
+    def __init__(self, **kwargs):
+        self.model = kwargs['model'] 
+        self.lookup_field = kwargs['lookup_field']
+        self.keyword = kwargs['keyword']
         
+        '''
+        Max number of related results.
+        '''
+        if 'max' in kwargs:
+            self.max = kwargs['max']
+        else:
+            self.max = 3
+
+        if kwargs['geo']:
+            self.location = kwargs['location']
+
+    def get_related(self):
+        min = len(self.keyword)
+        related = None
+        for item in self.model.objects.all():
+            title = getattr(item, self.lookup_field)
+            differences = sum(a!=b for a, b in zip(title, self.keyword))-abs(len(self.keyword)-len(title))
+            if differences < min:
+                min = differences
+                related = item
+        return related
+
+    def get_candidates(self):
+        try:
+            parameters = {self.lookup_field : self.keyword}
+            models = self.model.objects.get(**parameters)
+            return models
+        except self.model.DoesNotExist:
+            return self.get_related()
 
 
-    
+
+
+
+
+
+
 
 
