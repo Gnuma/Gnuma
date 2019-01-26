@@ -82,8 +82,9 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'api.wsgi.application'
+#WSGI_APPLICATION = 'api.wsgi.application'
 
+ACCOUNT_LOGOUT_ON_GET = True
 
 # Database
 # https://docs.djangoproject.com/en/2.1/ref/settings/#databases
@@ -152,6 +153,9 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 SITE_ID = 1
 
+
 CORS_ORIGIN_WHITELIST = (
     'localhost:3000',
 )
+
+

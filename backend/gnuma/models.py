@@ -13,16 +13,10 @@ class Office(models.Model):
     level = models.CharField(max_length = 2, choices = LEVEL, default = SP)
 
     def is_highschool(self):
-        return self.level is self.SP
-
-class GnumaUser(models.Model):
-    user = models.OneToOneField(User, on_delete = models.CASCADE, primary_key = True)
-    office = models.ForeignKey(Office, on_delete = models.CASCADE) 
-
-class Book(models.Model):
-    title = models.CharField(max_length = 50)
-    author = models.CharField(max_length = 50)
-    isbn = models.CharField(max_length = 10, primary_key = True)
+        return self.level is self.SP    
+    
+    def __str__(self):
+        return self.name
 
 class Class(models.Model):
     P  = '1'
@@ -48,13 +42,33 @@ class Class(models.Model):
     )
     division = models.CharField(max_length = 1, choices = DIVISION, default = A)
     office = models.ForeignKey(Office, on_delete = models.CASCADE)
-    books = models.ForeignKey(Book, on_delete = models.CASCADE) 
+    
+    def __str__(self):
+        return self.grade+" "+self.division+" "+self.office.name
 
+class Book(models.Model):
+    title = models.CharField(max_length = 50)
+    author = models.CharField(max_length = 50)
+    isbn = models.CharField(max_length = 13, primary_key = True)
+    classes = models.ManyToManyField(Class)
 
+    def __str__(self):
+        return self.title
+    
+class GnumaUser(models.Model):
+    user = models.OneToOneField(User, on_delete = models.CASCADE, primary_key = True)
+    classM = models.ForeignKey(Class, on_delete = models.CASCADE) 
+
+    def __str__(self):
+        return User.__str__(self.user)
 
 class Ad(models.Model):
     title = models.CharField(max_length = 200)
-    #Aggiungere immagine libro
+    image = models.CharField(max_length = 200)
     price = models.FloatField()
     book = models.ForeignKey(Book, on_delete = models.CASCADE)
     seller = models.ForeignKey(GnumaUser, on_delete = models.CASCADE)
+    
+    def __str__(self):
+        return GnumaUser.__str__(self.seller)+":"+self.title
+
