@@ -166,12 +166,7 @@ class AdManager(viewsets.GenericViewSet):
             return JsonResponse({"detail":"Invalid argument"}, status = status.HTTP_400_BAD_REQUEST)
         title = request.data['title']
         price = request.data['price']
-        if self.handler is None
-            newAd = Ad.objects.create(title = title, price = price, book = book, seller = user, image = self.handler.get_path())
-            #handler destroyed?
-            handler = None
-        else:
-            newAd = Ad.objects.create(title = title, price = price, book = book, seller = user)
+        newAd = Ad.objects.create(title = title, price = price, book = book, seller = user)
         newAd.save()
         return HttpResponse(status = status.HTTP_201_CREATED)
     
@@ -193,22 +188,7 @@ class AdManager(viewsets.GenericViewSet):
         '''
         To be defined.
         '''
-    
-    @action(detail = False, methods = ['post'])
-    def upload_image(self, request, filename, format = None):
-        allowed_ext = ("image/png", "image/jpeg")
-        if request.content_type = None or request.content_type not in allowed_ext:
-            return JsonResponse({"detail":"Extension not allowed"}, status = status.HTTP_400_BAD_REQUEST)
-        '''
-        This version does not check the raw image size.
-        '''
-        self.handler = ImageHandler(path = "../images/"+filename, content = request.data['file'])
-        self.handler.open()
-        self.handler = Image
-        # handler.destroy() ?
-
-
-        
+                
 '''
 -------------------------------------------------------------------------------------------------------------------+
                                                                                                                    |
