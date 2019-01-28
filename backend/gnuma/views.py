@@ -4,7 +4,6 @@ from .serializers import BookSerializer, AdSerializer
 from django.http import HttpResponse, JsonResponse
 from rest_framework.authtoken.models import Token
 from django.contrib.auth.models import User
-from django.db.models import F
 from rest_framework.decorators import api_view, authentication_classes, action
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import  IsAuthenticated , AllowAny 
@@ -77,7 +76,7 @@ Book Manager                                                                    
 class BookManager(viewsets.GenericViewSet):
 
     authentication_classes = [TokenAuthentication]
-    safe_actions = ('list', 'retrieve')
+    safe_actions = ('list', 'retrieve', 'search')
     lookup_field = 'isbn'
     queryset = Book.objects.all()
 
@@ -126,6 +125,16 @@ class BookManager(viewsets.GenericViewSet):
         serializer = BookSerializer(book, many = False)
         return JsonResponse(serializer.data, status = status.HTTP_200_OK, safe = False)
     
+    @action(detail = False, methods = ['post'])
+    def search(self, request):
+        if 'keyword' not in request.data:
+            return JsonResponse({"detail":"One or more arguments are missing!"}, status = status.HTTP_400_BAD_REQUEST)
+        e = Engine(model = Book, lookup_field = 'title', keyword = request.data['keyword'], geo = False)
+        book = e.get_candidates()
+        serializer = BookSerializer(book, many = False)
+        return JsonResponse(serializer.data, status = status.HTTP_200_OK, safe = False)
+
+    
 '''
 -------------------------------------------------------------------------------------------------------------------+
                                                                                                                    |
@@ -151,10 +160,18 @@ class AdManager(viewsets.GenericViewSet):
         if 'isbn' not in request.data or 'title' not in request.data or 'price' not in request.data:
             return JsonResponse({"detail":"one or more arguments are missing!"}, status = status.HTTP_400_BAD_REQUEST)
         user = GnumaUser.objects.get(user = request.user)
-        book = Book.objects.get(isbn = request.data['isbn'])
+        try:
+            book = Book.objects.get(isbn = request.data['isbn'])
+        except Book.DoesNotExist:
+            return JsonResponse({"detail":"Invalid argument"}, status = status.HTTP_400_BAD_REQUEST)
         title = request.data['title']
         price = request.data['price']
-        newAd = Ad.objects.create(title = title, price = price, book = book, seller = user)
+        if self.handler is None
+            newAd = Ad.objects.create(title = title, price = price, book = book, seller = user, image = self.handler.get_path())
+            #handler destroyed?
+            handler = None
+        else:
+            newAd = Ad.objects.create(title = title, price = price, book = book, seller = user)
         newAd.save()
         return HttpResponse(status = status.HTTP_201_CREATED)
     
@@ -165,6 +182,8 @@ class AdManager(viewsets.GenericViewSet):
 
     @action(detail = False, methods = ['post'])
     def search(self, request):
+        if 'keyword' not in request.data:
+            return JsonResponse({"detail":"One or more arguments are missing!"}, status = status.HTTP_400_BAD_REQUEST)
         e = Engine(model = Book, lookup_field = 'title', keyword = request.data['keyword'], geo = False)
         book = e.get_candidates()
         serializer = self.get_serializer_class()(Ad.objects.filter(book = book), many = True)
@@ -174,6 +193,21 @@ class AdManager(viewsets.GenericViewSet):
         '''
         To be defined.
         '''
+    
+    @action(detail = False, methods = ['post'])
+    def upload_image(self, request, filename, format = None):
+        allowed_ext = ("image/png", "image/jpeg")
+        if request.content_type = None or request.content_type not in allowed_ext:
+            return JsonResponse({"detail":"Extension not allowed"}, status = status.HTTP_400_BAD_REQUEST)
+        '''
+        This version does not check the raw image size.
+        '''
+        self.handler = ImageHandler(path = "../images/"+filename, content = request.data['file'])
+        self.handler.open()
+        self.handler = Image
+        # handler.destroy() ?
+
+
         
 '''
 -------------------------------------------------------------------------------------------------------------------+
@@ -220,12 +254,16 @@ class Engine:
         except self.model.DoesNotExist:
             return self.get_related()
 
+class ImageHandler:
 
+    def __init__(self, **kwargs):
+        self.action = kwargs['action']
+        self.path = kwargs['path']
+        self.sizes = {'retrieve': (100, 60), 'search':(25,25)}
 
+    def get_image(self):
 
+    def resize(self):
 
-
-
-
-
-
+    def get_path(self):
+        return self.path
