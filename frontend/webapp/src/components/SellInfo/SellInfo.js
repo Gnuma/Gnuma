@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import "./SellInfo.scss";
+import axios from "axios";
 import SearchBox from "../Box/SearchBox/SearchBox";
 import InfoBox from "../Box/InfoBox/InfoBox";
 import BookItem from "./BoxItems/BookItem";
@@ -17,7 +18,9 @@ export default class SellInfo extends Component {
     this.handleSearchChange = this.handleSearchChange.bind(this);
     this.handleSelection = this.handleSelection.bind(this);
     this.handleInfoChange = this.handleInfoChange.bind(this);
+    this.handleBookCreationChange = this.handleBookCreationChange.bind(this);
     this.selectConditions = this.selectConditions.bind(this);
+    this.handleBookMode = this.handleBookMode.bind(this);
     this.submit = this.submit.bind(this);
   }
 
@@ -48,6 +51,20 @@ export default class SellInfo extends Component {
         }
       ],
       selected: undefined
+    },
+    bookCreation: {
+      title: {
+        value: "",
+        errorMessage: ""
+      },
+      isbn: {
+        value: "",
+        errorMessage: ""
+      },
+      author: {
+        value: "",
+        errorMessage: ""
+      }
     },
     officeSelection: {
       query: "",
@@ -95,31 +112,80 @@ export default class SellInfo extends Component {
           name: "Seleziona..."
         }
       }
-    }
+    },
+    isSelectingBook: false
   };
 
   render() {
-    const { bookSelection, officeSelection, infos } = this.state;
+    const {
+      bookSelection,
+      officeSelection,
+      infos,
+      isSelectingBook,
+      bookCreation
+    } = this.state;
 
     return (
       <div className="sell-informations-list">
-        <SearchBox
-          className="book-box"
-          id="bookSelection"
-          handleChange={this.handleSearchChange}
-          value={bookSelection.query}
-          title="Quale libro vuoi vendere?"
-        >
-          {bookSelection.results.map(result => (
-            <BookItem
-              key={result.id}
-              id="bookSelection"
-              isSelected={bookSelection.selected === result}
-              select={this.handleSelection}
-              book={result}
-            />
-          ))}
-        </SearchBox>
+        {isSelectingBook ? (
+          <SearchBox
+            className="book-box"
+            id="bookSelection"
+            handleChange={this.handleSearchChange}
+            value={bookSelection.query}
+            title="Quale libro vuoi vendere?"
+          >
+            {bookSelection.results.map(result => (
+              <BookItem
+                key={result.id}
+                id="bookSelection"
+                isSelected={bookSelection.selected === result}
+                select={this.handleSelection}
+                book={result}
+              />
+            ))}
+            <h1 className="s-subtitle">
+              Non trovi il tuo libro?{" "}
+              <span className="text-link" onClick={this.handleBookMode}>
+                Aggiungine uno
+              </span>
+            </h1>
+          </SearchBox>
+        ) : (
+          <InfoBox
+            title="Quale libro vuoi vendere?"
+            className="book-creation-box"
+          >
+            <div className="book-creation-content">
+              <TextField
+                label="Titolo"
+                onChange={this.handleBookCreationChange}
+                type="text"
+                id="title"
+                state={bookCreation.title}
+              />
+              <TextField
+                label="Autori"
+                onChange={this.handleBookCreationChange}
+                type="text"
+                id="author"
+                state={bookCreation.author}
+              />
+              <TextField
+                label="ISBN"
+                onChange={this.handleBookCreationChange}
+                type="text"
+                id="isbn"
+                state={bookCreation.isbn}
+              />
+            </div>
+            <h1 className="s-subtitle">
+              <span className="text-link" onClick={this.handleBookMode}>
+                Cerca il tuo libro
+              </span>
+            </h1>
+          </InfoBox>
+        )}
 
         <SearchBox
           className="office-box"
@@ -139,7 +205,7 @@ export default class SellInfo extends Component {
           ))}
         </SearchBox>
 
-        <InfoBox title="Aggiungi delle informazioni">
+        <InfoBox title="Aggiungi delle informazioni" className="info-box">
           <ImageSelector />
           <div className="info-box-right-col">
             <label>Prezzo</label>
@@ -189,6 +255,20 @@ export default class SellInfo extends Component {
     }));
   }
 
+  handleBookCreationChange(e) {
+    const { id, value } = e.target;
+
+    this.setState(prevState => ({
+      bookCreation: {
+        ...prevState.bookCreation,
+        [id]: {
+          ...prevState.bookCreation[id],
+          value: value
+        }
+      }
+    }));
+  }
+
   selectConditions(item) {
     this.setState(prevState => ({
       infos: {
@@ -220,28 +300,101 @@ export default class SellInfo extends Component {
     }));
   }
 
+  handleBookMode() {
+    this.setState(prevState => ({
+      isSelectingBook: !prevState.isSelectingBook
+    }));
+  }
+
   submit() {
-    const fields = {
-      book: {
-        value: this.state.bookSelection.selected
-      },
-      office: {
-        value: this.state.officeSelection.selected
-      },
-      price: this.state.infos.price
-    };
+    let fields, validators;
+    const { isSelectingBook } = this.state;
+
+    if (isSelectingBook) {
+      fields = {
+        book: {
+          value: this.state.bookSelection.selected
+        },
+        office: {
+          value: this.state.officeSelection.selected
+        },
+        price: this.state.infos.price
+      };
+      validators = {
+        book: {
+          functions: [isEmpty],
+          warnings: ["Seleziona il libro che vuoi vendere."]
+        },
+        office: {
+          functions: [isEmpty],
+          warnings: ["Seleziona il tuo istituto"]
+        },
+        price: {
+          functions: [isEmpty],
+          warnings: ["Inserisci il prezzo."]
+        }
+      };
+    } else {
+      fields = {
+        bookTitle: this.state.bookCreation.title,
+        bookAuthor: this.state.bookCreation.author,
+        bookIsbn: this.state.bookCreation.isbn,
+        office: {
+          value: this.state.officeSelection.selected
+        },
+        price: this.state.infos.price
+      };
+      validators = {
+        bookTitle: {
+          functions: [isEmpty],
+          warnings: ["Inserisci il titolo del libro"]
+        },
+        bookAuthor: {
+          functions: [isEmpty],
+          warnings: ["Inserisci l'autore del libro"]
+        },
+        bookIsbn: {
+          functions: [isEmpty],
+          warnings: ["Inserisci il codice ISBN del libro"]
+        },
+        office: {
+          functions: [isEmpty],
+          warnings: ["Seleziona il tuo istituto"]
+        },
+        price: {
+          functions: [isEmpty],
+          warnings: ["Inserisci il prezzo."]
+        }
+      };
+    }
 
     const result = submit(fields, validators);
 
     console.log(result);
 
     if (result === true) {
-      console.log("ok");
+      const title = this.state.bookCreation.title.value;
+      const author = this.state.bookCreation.author.value;
+      const isbn = this.state.bookCreation.isbn.value;
+      axios.post("http://127.0.0.1:8000/gnuma/v1/books/", {
+        title,
+        author,
+        isbn
+      });
     } else {
-      this.setState(prevState => ({
-        ...prevState,
-        result
-      }));
+      if (!isSelectingBook) {
+        const updatedBookCreation = {
+          title: result.bookTitle,
+          author: result.bookAuthor,
+          isbn: result.bookIsbn
+        };
+        this.setState(prevState => ({
+          bookCreation: {
+            ...prevState,
+            ...updatedBookCreation
+          }
+        }));
+      }
     }
   }
 }

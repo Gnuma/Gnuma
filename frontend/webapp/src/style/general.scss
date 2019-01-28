@@ -77,10 +77,17 @@
   font-weight: weight(light-regular);
 }
 
-.highlight {
+.highlight,
+.text-link {
   font-size: 14px;
   color: color(primary);
   font-weight: weight(bold);
+}
+
+.text-link:hover {
+  text-decoration: underline;
+  cursor: pointer;
+  display: inline-block;
 }
 
 .underlined {

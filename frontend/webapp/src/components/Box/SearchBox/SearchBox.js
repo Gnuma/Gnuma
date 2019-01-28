@@ -45,10 +45,6 @@ export default class SearchBox extends Component {
         isActive: true,
         maxHeight: this.boxRef.current.scrollHeight + "px"
       });
-    } else {
-      this.setState({
-        isActive: false
-      });
     }
   }
 }

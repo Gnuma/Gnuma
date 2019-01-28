@@ -9,6 +9,7 @@ export const authStart = () => {
 
 export const loginSuccess = token => {
   localStorage.setItem("token", token);
+  axios.defaults.headers.common["Authorization"] = "Token " + token; // for all requests
   return {
     type: actionTypes.LOGIN_SUCCESS,
     payload: {
@@ -19,6 +20,7 @@ export const loginSuccess = token => {
 
 export const logoutSuccess = () => {
   localStorage.removeItem("token");
+  axios.defaults.headers.common["Authorization"] = undefined; // for all requests
   return {
     type: actionTypes.LOGOUT_SUCCESS
   };
@@ -59,9 +61,7 @@ export const authLogout = () => {
       dispatch(authFail("The user wasn't logged in"));
     } else {
       axios
-        .post("http://127.0.0.1:8000/gnuma/v1/auth/logout/", null, {
-          headers: { Authorization: "Token " + token }
-        })
+        .post("http://127.0.0.1:8000/gnuma/v1/auth/logout/")
         .then(() => {
           dispatch(logoutSuccess());
         })
@@ -95,7 +95,18 @@ export const authSignup = (username, email, password1, password2) => {
       })
       .then(res => {
         const token = res.data.key;
-        dispatch(loginSuccess(token));
+        axios
+          .post("http://127.0.0.1:8000/gnuma/v1/init/", {
+            key: token,
+            classM: "5B",
+            office: "J. Von Neumann"
+          })
+          .then(res => {
+            dispatch(loginSuccess(token));
+          })
+          .catch(err => {
+            dispatch(authFail(err));
+          });
       })
       .catch(err => {
         dispatch(authFail(err));

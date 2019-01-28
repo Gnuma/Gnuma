@@ -18,7 +18,7 @@ const BaseRouter = () => (
     <Route exact path="/login" component={Login} />
     <Route exact path="/signup" component={Signup} />
     <Route exact path="/view/:item_id" component={Item} />
-    <Route exact path="/vendi" component={Sell} />
+    <ProtectedRoute exact path="/vendi" component={Sell} />
     <ProtectedRoute exact path="/user" component={User} />
   </div>
 );

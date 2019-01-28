@@ -112,8 +112,7 @@ export class Signup extends Component {
       this.props.signup(username, email, password1, password2);
     } else {
       this.setState(prevState => ({
-        ...prevState,
-        result
+        fields: { ...prevState, ...result }
       }));
     }
   }

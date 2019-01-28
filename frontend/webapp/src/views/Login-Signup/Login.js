@@ -81,8 +81,7 @@ export class Login extends Component {
     } else {
       //Fail
       this.setState(prevState => ({
-        ...prevState,
-        result
+        fields: { ...prevState, ...result }
       }));
     }
   }

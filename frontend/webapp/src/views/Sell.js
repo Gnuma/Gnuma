@@ -6,14 +6,16 @@ import MainSell from "../components/MainSell/MainSell";
 function Sell(props) {
   return (
     <div className="view">
-      <MainSell />
+      <MainSell token={props.token} />
     </div>
   );
 }
 
 Sell.propTypes = {};
 
-const mapStateToProps = state => ({});
+const mapStateToProps = state => ({
+  token: state.auth.token
+});
 
 const mapDispatchToProps = {};
 
