@@ -1,37 +1,31 @@
-from rest_framework import viewsets, status
-from .models import GnumaUser, Book, Office, Class, Ad
-from .serializers import BookSerializer, AdSerializer
-from django.http import HttpResponse, JsonResponse
-from rest_framework.authtoken.models import Token
+# OS imports
+import os, sys
+
+# Django imports
 from django.contrib.auth.models import User
-from rest_framework.decorators import api_view, authentication_classes, action
+from django.http import HttpResponse, JsonResponse
+from django.conf import settings
+
+# Rest imports
+from rest_framework import viewsets, status
+from rest_framework.authtoken.models import Token
+from rest_framework.decorators import api_view, authentication_classes, action, parser_classes, permission_classes
 from rest_framework.authentication import TokenAuthentication
-from rest_framework.permissions import  IsAuthenticated , AllowAny 
+from rest_framework.permissions import  IsAuthenticated , AllowAny
+from rest_framework.exceptions import ValidationError
+from rest_framework.parsers import FileUploadParser
+
+# Local imports
+from .models import GnumaUser, Book, Office, Class, Ad, Queue_ads
+from .serializers import BookSerializer, AdSerializer
+from .imageh import ImageHandler
+
+ImageQueue = {}
 
 '''
-Create the GnumaUser object.
-It must be called right after the registration phase.
+init the internal user object.
 
-Parameters:
-
-key: the key returned by the registration API.
-
-
-Front-end                               API
-
-    Dati ------------------->   gnuma/v1/auth/registration/
-                                 
-        <--------------------   token
-    
-    token ------------------->  (url view)
-
-JSON params:
-
-key: Token returned by the registration's API
-
-office: user's office
-
-classM: 2 chars representing the user's class; make sure it's well formed, if it doesn't the request will fail. 
+#1: To be rewritten.
 '''
 @api_view(['POST',])
 @authentication_classes([TokenAuthentication,])
@@ -40,9 +34,8 @@ def init_user(request):
         return JsonResponse({"detail":"one or more arguments are missing!"}, status = status.HTTP_400_BAD_REQUEST)
     try:
         token = Token.objects.get(key = request.data['key'])
-    except GnumaUser.DoesNotExist:
+    except Token.DoesNotExist:
         return HttpResponse(status = status.HTTP_400_BAD_REQUEST)
-    username = token.user
     user = User.objects.get(username = token.user)
     classM = request.data['classM'] 
     try:
@@ -58,12 +51,52 @@ def init_user(request):
     except Class.DoesNotExist:
         #if the Class objects doesn't exits, it'll just create it
         c = Class.objects.create(division = division, grade = grade, office = office)
+        c.save()
     try:
         newUser = GnumaUser.objects.get(user = user, classM = c)
     except GnumaUser.DoesNotExist:
-        newUser = GnumaUser.objects.create(user = user, classM = c)
+        newUser = GnumaUser.objects.create(user = user, classM = c, adsCreated = 0, level = "Free")
+        
+        #Create the directory for images.
+        try: 
+            os.mkdir(r''.join([settings.IMAGES_DIR, user.username, '/']))          # ---------------------------------------> MUST BE TESTED
+        except Exception as e:
+            newUser.save() # To be deleted
+            return HttpResponse(str(e), status = status.HTTP_403_FORBIDDEN)
         newUser.save()
     return HttpResponse(status = status.HTTP_201_CREATED)
+
+'''
+Must be tested
+
+'''
+@api_view(['POST',])
+@authentication_classes([TokenAuthentication,])
+@permission_classes([IsAuthenticated,])
+@parser_classes([FileUploadParser,])
+def upload_image(request, filename, format = None):
+    '''
+    Allowed images' types
+    '''
+    allowed_ext = ("image/png", "image/jpeg")
+    if request.content_type == None or request.content_type not in allowed_ext:
+        return JsonResponse({"detail":"extension not allowed"}, status = status.HTTP_400_BAD_REQUEST)
+    
+    '''
+    This version does not check the raw image size.
+    '''
+    global ImageQueue
+    if ImageQueue.get(request.user.username, True):
+        ImageQueue[request.user.username] = filename
+    else:
+        return JsonResponse({'detail':'this user has already uploaded an image!'}, status = status.HTTP_409_CONFLICT)
+
+    handler = ImageHandler(filename = filename, content = request.data['file'], user = request.user, content_type = request.content_type)
+    handler.open()
+    return HttpResponse(status = status.HTTP_201_CREATED)
+    
+    
+    
 
 '''
 -------------------------------------------------------------------------------------------------------------------+
@@ -156,24 +189,99 @@ class AdManager(viewsets.GenericViewSet):
             permission_classes = [IsAuthenticated] 
         return [permission() for permission in permission_classes]
 
-    def create(self, request):
-        if 'isbn' not in request.data or 'title' not in request.data or 'price' not in request.data:
-            return JsonResponse({"detail":"one or more arguments are missing!"}, status = status.HTTP_400_BAD_REQUEST)
+
+    '''
+    Enqueue the items that don't have a confirmed book related.
+    '''
+    def enqueue(self, request):
         user = GnumaUser.objects.get(user = request.user)
-        try:
+        instance = {'title': request.data['title'], 'price': request.data['price'], 'seller': user}
+        if not self.get_serializer_class()(data = instance).is_valid():
+            return HttpResponse(status = status.HTTP_400_BAD_REQUEST)
+        enqueued = Ad.objects.create(**instance)
+        enqueued.save()
+        # test queue_ads
+        enqueued = Queue_ads(ad = enqueued, book_title = request.data['book_title'])  
+        enqueued.save()
+        user.adsCreated = user.adsCreated+1
+        user.save()
+        return JsonResponse({'detail':'item enqueued!'}, status = status.HTTP_201_CREATED)
+
+
+
+    '''
+    The following method creates an item.
+
+    The client should indicate whether the book has been selected from the hints.
+
+    More precisely:
+    
+    if the book has been choosen from the hints, the client should send its isbn code ('isbn' JSON);
+    if the book hasn't been choosen from the hints, the client should send its name ('book_title' JSON).
+    '''
+    def create(self, request):
+        print('last pk was '+prova)
+        user = GnumaUser.objects.get(user = request.user)
+        #Check whether the user has reached his items' limit
+        if user.level == "Free" and user.adsCreated == 10:
+            return JsonResponse({'detail':'The user cannot insert any other item!'}, status = status.HTTP_403_FORBIDDEN)
+        elif user.level == "Pro" and user.adsCreated == 20:
+            return JsonResponse({'detail':'The user cannot insert any other item!'}, status = status.HTTP_403_FORBIDDEN)
+
+        # Check the arguments' validity
+        if 'title' not in request.data or 'price' not in request.data or ('isbn' not in request.data and 'book_title' not in request.data):
+            return JsonResponse({"detail":"one or more arguments are missing!"}, status = status.HTTP_400_BAD_REQUEST)
+
+
+        # If the book isn't in the database just enqueue the item
+        if 'book_title' in request.data:
+            return self.enqueue(request)
+        
+
+        # This get should never raise and exception, unless the endpoint hasn't been called by the React client.
+        # WHITE_LIST CHECK
+        try: 
             book = Book.objects.get(isbn = request.data['isbn'])
         except Book.DoesNotExist:
-            return JsonResponse({"detail":"Invalid argument"}, status = status.HTTP_400_BAD_REQUEST)
-        title = request.data['title']
-        price = request.data['price']
-        newAd = Ad.objects.create(title = title, price = price, book = book, seller = user)
+            return JsonResponse({'detail':'something went wrong'}, status = status.HTTP_400_BAD_REQUEST)
+
+        #image = ImageQueue.pop(request.user.username, None)
+        instance = {'title': request.data['title'], 'price': request.data['price'], 'book': book, 'seller': user}
+
+        
+        # Validate data
+        if not self.get_serializer_class()(data = instance).is_valid():
+            return HttpResponse(status = status.HTTP_400_BAD_REQUEST)
+
+        try: 
+            self.get_serializer_class()(data = instance).is_valid(raise_exception = True)
+        except ValidationError as e:
+            print(str(e))
+            return JsonResponse({'detail':'data is not valid!'}, status = status.HTTP_400_BAD_REQUEST)
+        except TypeError as e:
+            print(str(e))
+            return JsonResponse({'detail':'data is not valid!'}, status = status.HTTP_400_BAD_REQUEST)
+        # Must be tested
+        try:
+            Ad.objects.get(book = book, seller = user)
+            return JsonResponse({'detail':'item already exists!'}, status = status.HTTP_409_CONFLICT)
+        except Ad.DoesNotExist:
+                newAd = Ad.objects.create(**instance)
         newAd.save()
+        
+        user.adsCreated = user.adsCreated+1
+        user.save()
+        
         return HttpResponse(status = status.HTTP_201_CREATED)
-    
+
+
     def retrieve(self, request, *args, **kwargs):
+        global prova
+        prova = kwargs['pk']
         ad = self.get_object()
         serializer = self.get_serializer_class()(ad, many = False)
         return JsonResponse(serializer.data, status = status.HTTP_200_OK, safe = False)
+
 
     @action(detail = False, methods = ['post'])
     def search(self, request):
@@ -183,16 +291,19 @@ class AdManager(viewsets.GenericViewSet):
         book = e.get_candidates()
         serializer = self.get_serializer_class()(Ad.objects.filter(book = book), many = True)
         return JsonResponse(serializer.data, status=status.HTTP_200_OK, safe = False)
+
+    
     @action(detail = False, methods = ['post'])
     def geo_search(self, request):
-        '''
-        To be defined.
-        '''
-                
+        return JsonResponse({'detail':'this service is not available'}, status = status.HTTP_403_FORBIDDEN)
+    
+
+
+        
 '''
 -------------------------------------------------------------------------------------------------------------------+
                                                                                                                    |
-Ad Manager                                                                                                         |
+Engine                                                                                                         |
                                                                                                                    |
 -------------------------------------------------------------------------------------------------------------------+
 '''        
@@ -234,16 +345,3 @@ class Engine:
         except self.model.DoesNotExist:
             return self.get_related()
 
-class ImageHandler:
-
-    def __init__(self, **kwargs):
-        self.action = kwargs['action']
-        self.path = kwargs['path']
-        self.sizes = {'retrieve': (100, 60), 'search':(25,25)}
-
-    def get_image(self):
-
-    def resize(self):
-
-    def get_path(self):
-        return self.path
