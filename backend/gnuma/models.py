@@ -58,17 +58,34 @@ class Book(models.Model):
 class GnumaUser(models.Model):
     user = models.OneToOneField(User, on_delete = models.CASCADE, primary_key = True)
     classM = models.ForeignKey(Class, on_delete = models.CASCADE) 
-
+    FREE = 'Free'
+    PRO = 'Pro'
+    BUSINESS = 'Business'
+    LEVELS = (
+        (FREE, 'Free user'),
+        (PRO, 'Pro user'),
+        (BUSINESS, 'Business user'),
+    )
+    # The following fields hasn't been migrated yet
+    level = models.CharField(max_length = 8, choices = LEVELS, default = FREE)
+    adsCreated = models.IntegerField(default = 0)
     def __str__(self):
         return User.__str__(self.user)
 
 class Ad(models.Model):
     title = models.CharField(max_length = 200)
-    image = models.CharField(max_length = 200)
+    #image = models.CharField(max_length = 200)
     price = models.FloatField()
-    book = models.ForeignKey(Book, on_delete = models.CASCADE)
+    book = models.ForeignKey(Book, on_delete = models.CASCADE, blank = True, null = True)
     seller = models.ForeignKey(GnumaUser, on_delete = models.CASCADE)
-    
+    enabled = models.BooleanField(default = True)
     def __str__(self):
         return GnumaUser.__str__(self.seller)+":"+self.title
 
+class Queue_ads(models.Model):
+    ad = models.ForeignKey(Ad, on_delete = models.CASCADE)
+    book_title = models.CharField(max_length = 50)
+    created = models.DateTimeField(auto_now_add = True)
+
+    def __str__(self):
+        return self.ad.__str__()+" "+self.book_title+" "+str(self.created)
