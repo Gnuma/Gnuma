@@ -15,6 +15,13 @@ from gnuma.views import upload_image
 from gnuma.models import Office, Class, GnumaUser
 
 
+'''
+
+The following class has been succesfully tested.
+
+TestCode: #3
+
+'''
 class InitUser(APITestCase):
     
     def setUp(self):
@@ -27,7 +34,15 @@ class InitUser(APITestCase):
         data = {'key':'12345', 'classM': '5B', 'office': 'Neumann'}
         response = self.client.post(url, data)
         print('The server has issued a %s status code: %s' % (response.status_code,response.content))
-        #tested
+
+
+'''
+
+The following class has been succesfully tested.
+
+TestCode: #1
+
+'''
 
 class UploadImageTest(APITestCase):
 
@@ -54,4 +69,16 @@ class UploadImageTest(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
 
+'''
+
+The following class hasn't been tested yet.
+
+TestCode: #4
+
+'''
+
+class DoubleCheckTest(APITestCase):
+
+    def setUp(self):
+        pass
 
