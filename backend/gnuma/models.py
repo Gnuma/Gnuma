@@ -48,7 +48,7 @@ class Class(models.Model):
 
 class Book(models.Model):
     title = models.CharField(max_length = 50)
-    author = models.CharField(max_length = 50)
+    author = models.CharField(max_length = 50, default = 'Sconosciuto', blank = True)
     isbn = models.CharField(max_length = 13, primary_key = True)
     classes = models.ManyToManyField(Class)
 
@@ -74,7 +74,7 @@ class GnumaUser(models.Model):
 
 class Ad(models.Model):
     title = models.CharField(max_length = 200)
-    #image = models.CharField(max_length = 200)
+    image = models.CharField(max_length = 2000, blank = True, null = True) # 2000 ? IE MAX URL LENGTH
     price = models.FloatField()
     book = models.ForeignKey(Book, on_delete = models.CASCADE, blank = True, null = True)
     seller = models.ForeignKey(GnumaUser, on_delete = models.CASCADE)
@@ -84,6 +84,7 @@ class Ad(models.Model):
 
 class Queue_ads(models.Model):
     ad = models.ForeignKey(Ad, on_delete = models.CASCADE)
+    isbn = models.CharField(max_length = 13)
     book_title = models.CharField(max_length = 50)
     created = models.DateTimeField(auto_now_add = True)
 
