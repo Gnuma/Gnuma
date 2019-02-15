@@ -19,6 +19,21 @@ from rest_framework.parsers import FileUploadParser
 from .models import GnumaUser, Book, Office, Class, Ad, Queue_ads
 from .serializers import BookSerializer, AdSerializer
 from .imageh import ImageHandler
+from .doubleCheckLayer import DoubleCheck
+
+
+''' 
+
+This dict works just like a queue.
+Each time a user wants to create an item he must issues two different requests:
+
+1) The first one will upload the image onto the sever.
+
+2) The second one will eventually relate the image, which has been previously uploaded, to the a new item.
+
+This dict enable these two queries to exchange informations.                                        
+
+'''
 
 ImageQueue = {}
 
@@ -79,11 +94,15 @@ def upload_image(request, filename, format = None):
     Allowed images' types
     '''
     allowed_ext = ("image/png", "image/jpeg")
+
+    # Must be tested
+    if not DoubleCheck(token = request.auth).is_valid():
+        return JsonResponse({'detail' : 'your token has expired'}, status = status.HTTP_403_FORBIDDEN)
+
     if request.content_type == None or request.content_type not in allowed_ext:
         return JsonResponse({"detail":"extension not allowed"}, status = status.HTTP_400_BAD_REQUEST)
-    
     '''
-    This version does not check the raw image size.
+    IS FILE SIZE ACCEPTABLE ?
     '''
     global ImageQueue
     if ImageQueue.get(request.user.username, True):
@@ -195,12 +214,12 @@ class AdManager(viewsets.GenericViewSet):
     '''
     def enqueue(self, request):
         user = GnumaUser.objects.get(user = request.user)
-        instance = {'title': request.data['title'], 'price': request.data['price'], 'seller': user}
+        instance = {'title': request.data['title'], 'isbn': request.data['isbn'],'price': request.data['price'], 'seller': user, 'enabled': False}
         if not self.get_serializer_class()(data = instance).is_valid():
             return HttpResponse(status = status.HTTP_400_BAD_REQUEST)
         enqueued = Ad.objects.create(**instance)
         enqueued.save()
-        # test queue_ads
+        # QUEUE_ADS IS VALID ?
         enqueued = Queue_ads(ad = enqueued, book_title = request.data['book_title'])  
         enqueued.save()
         user.adsCreated = user.adsCreated+1
@@ -213,23 +232,25 @@ class AdManager(viewsets.GenericViewSet):
     The following method creates an item.
 
     The client should indicate whether the book has been selected from the hints.
-
-    More precisely:
+    If it wasn't the client should add 'book_title' into the JSON object.
+    Each request that has the 'book_title' creates an enqueued item, that eventually will be enabled by the staff.
     
-    if the book has been choosen from the hints, the client should send its isbn code ('isbn' JSON);
-    if the book hasn't been choosen from the hints, the client should send its name ('book_title' JSON).
     '''
     def create(self, request):
-        print('last pk was '+prova)
         user = GnumaUser.objects.get(user = request.user)
-        #Check whether the user has reached his items' limit
+        
+        # Must be tested
+        if not DoubleCheck(token = request.auth).is_valid():
+            return JsonResponse({'detail' : 'your token has expired'}, status = status.HTTP_401_UNAUTHORIZED) # Returns the same as user's limit reached. Must be changed
+
+        # Check whether the user has reached his items' limit
         if user.level == "Free" and user.adsCreated == 10:
             return JsonResponse({'detail':'The user cannot insert any other item!'}, status = status.HTTP_403_FORBIDDEN)
         elif user.level == "Pro" and user.adsCreated == 20:
             return JsonResponse({'detail':'The user cannot insert any other item!'}, status = status.HTTP_403_FORBIDDEN)
-
+        
         # Check the arguments' validity
-        if 'title' not in request.data or 'price' not in request.data or ('isbn' not in request.data and 'book_title' not in request.data):
+        if 'title' not in request.data or 'price' not in request.data or 'isbn' not in request.data:
             return JsonResponse({"detail":"one or more arguments are missing!"}, status = status.HTTP_400_BAD_REQUEST)
 
 
@@ -245,13 +266,10 @@ class AdManager(viewsets.GenericViewSet):
         except Book.DoesNotExist:
             return JsonResponse({'detail':'something went wrong'}, status = status.HTTP_400_BAD_REQUEST)
 
-        #image = ImageQueue.pop(request.user.username, None)
-        instance = {'title': request.data['title'], 'price': request.data['price'], 'book': book, 'seller': user}
+        image = ImageQueue.pop(request.user.username, None)
+        instance = {'title': request.data['title'], 'image': image,'price': request.data['price'], 'book': book, 'seller': user}
 
-        
-        # Validate data
-        if not self.get_serializer_class()(data = instance).is_valid():
-            return HttpResponse(status = status.HTTP_400_BAD_REQUEST)
+        #print('DEBUG : '+repr(self.get_serializer_class()(data = instance)._writable_fields))
 
         try: 
             self.get_serializer_class()(data = instance).is_valid(raise_exception = True)
@@ -260,8 +278,9 @@ class AdManager(viewsets.GenericViewSet):
             return JsonResponse({'detail':'data is not valid!'}, status = status.HTTP_400_BAD_REQUEST)
         except TypeError as e:
             print(str(e))
-            return JsonResponse({'detail':'data is not valid!'}, status = status.HTTP_400_BAD_REQUEST)
-        # Must be tested
+            return JsonResponse({'detail':'the server was not able to process your request!'}, status = status.HTTP_400_BAD_REQUEST)
+       
+       
         try:
             Ad.objects.get(book = book, seller = user)
             return JsonResponse({'detail':'item already exists!'}, status = status.HTTP_409_CONFLICT)
@@ -276,8 +295,6 @@ class AdManager(viewsets.GenericViewSet):
 
 
     def retrieve(self, request, *args, **kwargs):
-        global prova
-        prova = kwargs['pk']
         ad = self.get_object()
         serializer = self.get_serializer_class()(ad, many = False)
         return JsonResponse(serializer.data, status = status.HTTP_200_OK, safe = False)
