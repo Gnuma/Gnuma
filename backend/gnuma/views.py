@@ -29,9 +29,9 @@ Each time a user wants to create an item he must issues two different requests:
 
 1) The first one will upload the image onto the sever.
 
-2) The second one will eventually relate the image, which has been previously uploaded, to the a new item.
+2) The second one will eventually relate the image, which has been previously uploaded, to the new item.
 
-This dict enable these two queries to exchange informations.                                        
+This dict enable these two endpoints to exchange informations.                                        
 
 '''
 
